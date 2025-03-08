@@ -119,7 +119,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       bottom-right: "",
     ) = {
       [
-        #top-left #h(1fr) #top-right \
+        #top-left #h(1fr) #top-right \\
         #bottom-left #h(1fr) #bottom-right
       ]
     }
@@ -152,9 +152,9 @@ export const useTypstFormatStore = defineStore('typstFormat', {
     ) = {
       generic-two-by-two(
         top-left: strong(institution),
-        top-right: location,
+        top-right: dates,
         bottom-left: emph(degree),
-        bottom-right: emph(dates),
+        bottom-right: emph(location),
       )
     }
 
@@ -240,6 +240,6 @@ export const useTypstFormatStore = defineStore('typstFormat', {
   }),
 
   getters: {
-    getTypstFormat: (state) => state.typstFormat,
+    getTypstFormat: (state) => state.typstFormat.trim(),
   },
 })
