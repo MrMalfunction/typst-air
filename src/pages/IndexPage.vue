@@ -4,7 +4,7 @@
       <q-page class="row no-wrap">
         <!-- Left side form -->
         <div class="col form-container q-pa-md">
-        <div class="text-h6">Personal Information</div>
+          <div class="text-h6">Personal Information</div>
           <div class="row q-col-gutter-md">
             <div class="col-12">
               <q-input v-model="personalInfo.name" label="Name" outlined required />
@@ -125,6 +125,217 @@
                 class="q-mt-md"
               />
             </div>
+            <!-- Work Experience Section -->
+            <div class="col-12">
+              <div class="text-h6">Work Experience</div>
+              <draggable
+                v-model="personalInfo.work"
+                item-key="id"
+                handle=".drag-handle"
+                class="q-gutter-y-md"
+              >
+                <template #item="{ element, index }">
+                  <q-card class="q-pa-md">
+                    <div class="row q-col-gutter-md">
+                      <div class="col-12 row items-center">
+                        <q-btn flat round icon="drag_indicator" class="drag-handle" />
+                        <q-btn
+                          flat
+                          round
+                          icon="delete"
+                          color="negative"
+                          @click="removeWork(index)"
+                          class="q-ml-auto"
+                        />
+                      </div>
+                      <div class="col-12">
+                        <q-input v-model="element.title" label="Position Title" outlined required />
+                      </div>
+                      <div class="col-12">
+                        <q-input v-model="element.company" label="Company" outlined required />
+                      </div>
+                      <div class="col-12">
+                        <q-input v-model="element.location" label="Location" outlined required />
+                      </div>
+                      <div class="col-6">
+                        <q-input v-model="element.startDate" label="Start Date" outlined required />
+                      </div>
+                      <div class="col-6">
+                        <q-input v-model="element.endDate" label="End Date" outlined required />
+                      </div>
+                      <div class="col-12">
+                        <div v-for="(point, pointIndex) in element.points" :key="pointIndex">
+                          <div class="row q-col-gutter-sm items-center q-mb-sm">
+                            <div class="col">
+                              <q-editor
+                                v-model="element.points[pointIndex]"
+                                :toolbar="[['bold'], ['link'], ['undo', 'redo']]"
+                                :fonts="{ arial: 'Arial' }"
+                                content-class="editor-content"
+                                min-height="5rem"
+                              />
+                            </div>
+                            <div class="col-auto">
+                              <q-btn
+                                flat
+                                round
+                                icon="remove"
+                                color="negative"
+                                @click="removeWorkBulletPoint(index, pointIndex)"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <q-btn
+                          flat
+                          color="primary"
+                          icon="add"
+                          label="Add Bullet Point"
+                          @click="addWorkBulletPoint(index)"
+                          class="q-mt-sm"
+                        />
+                      </div>
+                    </div>
+                  </q-card>
+                </template>
+              </draggable>
+              <q-btn
+                color="primary"
+                icon="add"
+                label="Add Work Experience"
+                @click="addWork"
+                class="q-mt-md"
+              />
+            </div>
+            <div class="col-12">
+              <div class="text-h6">Projects</div>
+              <draggable
+                v-model="personalInfo.projects"
+                item-key="id"
+                handle=".drag-handle"
+                class="q-gutter-y-md"
+              >
+                <template #item="{ element, index }">
+                  <q-card class="q-pa-md">
+                    <div class="row q-col-gutter-md">
+                      <div class="col-12 row items-center">
+                        <q-btn flat round icon="drag_indicator" class="drag-handle" />
+                        <q-btn
+                          flat
+                          round
+                          icon="delete"
+                          color="negative"
+                          @click="removeProject(index)"
+                          class="q-ml-auto"
+                        />
+                      </div>
+                      <div class="col-12">
+                        <q-input v-model="element.name" label="Project Name" outlined required />
+                      </div>
+                      <div class="col-12">
+                        <q-input v-model="element.role" label="Role (Optional)" outlined />
+                      </div>
+                      <div class="col-12">
+                        <q-input v-model="element.url" label="Project URL (Optional)" outlined />
+                      </div>
+                      <div class="col-6">
+                        <q-input v-model="element.startDate" label="Start Date" outlined required />
+                      </div>
+                      <div class="col-6">
+                        <q-input v-model="element.endDate" label="End Date" outlined required />
+                      </div>
+                      <div class="col-12">
+                        <div v-for="(point, pointIndex) in element.points" :key="pointIndex">
+                          <div class="row q-col-gutter-sm items-center q-mb-sm">
+                            <div class="col">
+                              <q-editor
+                                v-model="element.points[pointIndex]"
+                                :toolbar="[['bold'], ['link'], ['undo', 'redo']]"
+                                :fonts="{ arial: 'Arial' }"
+                                content-class="editor-content"
+                                min-height="5rem"
+                              />
+                            </div>
+                            <div class="col-auto">
+                              <q-btn
+                                flat
+                                round
+                                icon="remove"
+                                color="negative"
+                                @click="removeProjectBulletPoint(index, pointIndex)"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <q-btn
+                          flat
+                          color="primary"
+                          icon="add"
+                          label="Add Bullet Point"
+                          @click="addProjectBulletPoint(index)"
+                          class="q-mt-sm"
+                        />
+                      </div>
+                    </div>
+                  </q-card>
+                </template>
+              </draggable>
+              <q-btn
+                color="primary"
+                icon="add"
+                label="Add Project"
+                @click="addProject"
+                class="q-mt-md"
+              />
+            </div>
+            <div class="col-12">
+              <div class="text-h6">Skills</div>
+              <draggable
+                v-model="personalInfo.skills"
+                item-key="id"
+                handle=".drag-handle"
+                class="q-gutter-y-md"
+              >
+                <template #item="{ element, index }">
+                  <q-card class="q-pa-md">
+                    <div class="row q-col-gutter-md">
+                      <div class="col-12 row items-center">
+                        <q-btn flat round icon="drag_indicator" class="drag-handle" />
+                        <q-btn
+                          flat
+                          round
+                          icon="delete"
+                          color="negative"
+                          @click="removeSkill(index)"
+                          class="q-ml-auto"
+                        />
+                      </div>
+                      <div class="col-12">
+                        <q-input v-model="element.heading" label="Category" outlined required />
+                      </div>
+                      <div class="col-12">
+                        <q-input
+                          v-model="element.content"
+                          label="Skills (comma-separated)"
+                          outlined
+                          required
+                          autogrow
+                          type="textarea"
+                          hint="Enter skills separated by commas"
+                        />
+                      </div>
+                    </div>
+                  </q-card>
+                </template>
+              </draggable>
+              <q-btn
+                color="primary"
+                icon="add"
+                label="Add Skill Category"
+                @click="addSkill"
+                class="q-mt-md"
+              />
+            </div>
           </div>
         </div>
 
@@ -150,9 +361,71 @@ import renderUrl from '@myriaddreamin/typst-ts-renderer/pkg/typst_ts_renderer_bg
 import compileUrl from '@myriaddreamin/typst-ts-web-compiler/pkg/typst_ts_web_compiler_bg.wasm?url'
 import { useTypstFormatStore } from 'stores/typst-format-store'
 import draggable from 'vuedraggable'
+import {
+  escapeTypstSpecialChars,
+  convertBoldHtmlToTypstBold,
+  convertHtmlToTypstLink,
+} from '../util/typst_conv.js'
 
 const typstFormatStore = useTypstFormatStore()
 const contentDiv = ref(null)
+
+const createDefaultWorkEntry = () => ({
+  id: Date.now(),
+  title: 'Position Title',
+  company: 'Company Name',
+  location: 'Location',
+  startDate: 'Start Date',
+  endDate: 'End Date',
+  points: ['Key achievement or responsibility 1', 'Key achievement or responsibility 2'],
+})
+
+const createDefaultProjectEntry = () => ({
+  id: Date.now(),
+  name: 'Project Name',
+  role: 'Role (Optional)',
+  startDate: 'Start Date',
+  endDate: 'End Date',
+  url: 'project-url.com',
+  points: ['Key achievement or responsibility 1', 'Key achievement or responsibility 2'],
+})
+
+const addWork = () => {
+  personalInfo.work.push(createDefaultWorkEntry())
+}
+
+const removeWork = (index) => {
+  if (personalInfo.work.length > 1) {
+    personalInfo.work.splice(index, 1)
+  } else {
+    personalInfo.work[0] = createDefaultWorkEntry()
+  }
+}
+
+const addWorkBulletPoint = (workIndex) => {
+  const newPointNumber = personalInfo.work[workIndex].points.length + 1
+  personalInfo.work[workIndex].points.push(`Key achievement or responsibility ${newPointNumber}`)
+}
+
+const removeWorkBulletPoint = (workIndex, pointIndex) => {
+  const points = personalInfo.work[workIndex].points
+  if (points.length > 1) {
+    points.splice(pointIndex, 1)
+  } else {
+    points[0] = 'Key achievement or responsibility 1'
+  }
+}
+
+// Helper function to format bullet points
+const formatBulletPoint = (point) => {
+  // First escape special Typst characters
+  let formatted = escapeTypstSpecialChars(point)
+  // Convert HTML bold to Typst bold
+  formatted = convertBoldHtmlToTypstBold(formatted)
+  // Convert HTML links to Typst links
+  formatted = convertHtmlToTypstLink(formatted)
+  return formatted
+}
 
 // Default education entry template
 const createDefaultEducationEntry = () => ({
@@ -164,6 +437,24 @@ const createDefaultEducationEntry = () => ({
   degree: 'Degree Name',
   points: ['Achievement or responsibility 1', 'Achievement or responsibility 2'],
 })
+
+const createDefaultSkillEntry = () => ({
+  id: Date.now(),
+  heading: 'New Category',
+  content: 'Skill 1, Skill 2, Skill 3',
+})
+
+const addSkill = () => {
+  personalInfo.skills.push(createDefaultSkillEntry())
+}
+
+const removeSkill = (index) => {
+  if (personalInfo.skills.length > 1) {
+    personalInfo.skills.splice(index, 1)
+  } else {
+    personalInfo.skills[0] = createDefaultSkillEntry()
+  }
+}
 
 const personalInfo = reactive({
   name: 'Stephen Xu',
@@ -187,7 +478,74 @@ const personalInfo = reactive({
       ],
     },
   ],
+  work: [
+    {
+      id: 1,
+      title: 'Software Engineer',
+      company: 'Tech Company',
+      location: 'San Francisco, CA',
+      startDate: 'Jan 2023',
+      endDate: 'Present',
+      points: ['Led development of core platform features', 'Managed team of 3 junior developers'],
+    },
+  ],
+  projects: [
+    {
+      id: 1,
+      name: 'Hyperschedule',
+      role: 'Maintainer',
+      startDate: 'Nov 2023',
+      endDate: 'Present',
+      url: 'hyperschedule.io',
+      points: [
+        'Maintain open-source scheduler used by 7000+ users at the Claremont Consortium with TypeScript, React and MongoDB',
+        'Manage PR reviews, bug fixes, and coordinate with college for releasing scheduling data and over $1500 of yearly funding',
+        'Ensure 99.99% uptime during peak loads of 1M daily requests during course registration through redundant servers',
+      ],
+    },
+  ],
+  skills: [
+    {
+      id: 1,
+      heading: 'Programming Languages',
+      content: 'JavaScript, Python, C/C++, HTML/CSS, Java, Bash, R, Flutter, Dart',
+    },
+    {
+      id: 2,
+      heading: 'Technologies',
+      content:
+        'React, Astro, Svelte, Tailwind CSS, Git, UNIX, Docker, Caddy, NGINX, Google Cloud Platform',
+    },
+  ],
 })
+
+const addProject = () => {
+  personalInfo.projects.push(createDefaultProjectEntry())
+}
+
+const removeProject = (index) => {
+  if (personalInfo.projects.length > 1) {
+    personalInfo.projects.splice(index, 1)
+  } else {
+    personalInfo.projects[0] = createDefaultProjectEntry()
+  }
+}
+
+const addProjectBulletPoint = (projectIndex) => {
+  const newPointNumber = personalInfo.projects[projectIndex].points.length + 1
+  personalInfo.projects[projectIndex].points.push(
+    `Key achievement or responsibility ${newPointNumber}`,
+  )
+}
+
+const removeProjectBulletPoint = (projectIndex, pointIndex) => {
+  const points = personalInfo.projects[projectIndex].points
+  if (points.length > 1) {
+    points.splice(pointIndex, 1)
+  } else {
+    points[0] = 'Key achievement or responsibility 1'
+  }
+}
 
 const addEducation = () => {
   personalInfo.education.push(createDefaultEducationEntry())
@@ -242,6 +600,46 @@ const generateTypstContent = () => {
     })
     .join('\n')
 
+  const workSection = personalInfo.work
+    .map((work) => {
+      const bulletPoints = work.points
+        .filter((point) => point.trim() !== '')
+        .map((point) => `       - ${formatBulletPoint(point)}`)
+        .join('\n')
+
+      return `
+        #work(
+          title: "${work.title}",
+          company: "${work.company}",
+          location: "${work.location}",
+          dates: dates-helper(start-date: "${formatTypstDate(work.startDate)}", end-date: "${formatTypstDate(work.endDate)}"),
+        )
+        ${bulletPoints}`
+    })
+    .join('\n')
+
+  const projectsSection = personalInfo.projects
+    .map((project) => {
+      const bulletPoints = project.points
+        .filter((point) => point.trim() !== '')
+        .map((point) => `       - ${formatBulletPoint(point)}`)
+        .join('\n')
+
+      return `
+          #project(
+            name: "${project.name}",
+            role: "${project.role}",
+            dates: dates-helper(start-date: "${formatTypstDate(project.startDate)}", end-date: "${formatTypstDate(project.endDate)}"),
+            url: "${project.url}",
+          )
+          ${bulletPoints}`
+    })
+    .join('\n')
+
+  const skillsSection = personalInfo.skills
+    .map((skill) => `- *${skill.heading}*: ${skill.content}`)
+    .join('\n')
+
   return `
     ${typstFormatStore.getTypstFormat}
     #let name = "${personalInfo.name}"
@@ -269,6 +667,15 @@ const generateTypstContent = () => {
 
     == Education
     ${educationSection}
+
+    == Work Experience
+    ${workSection}
+
+    == Projects
+    ${projectsSection}
+
+    == Skills
+        ${skillsSection}
   `
 }
 
@@ -352,5 +759,18 @@ onMounted(async () => {
 
 .drag-handle {
   cursor: move;
+}
+
+.editor-content {
+  min-height: 5rem;
+}
+
+.q-editor {
+  border-radius: 4px;
+}
+
+.skills-input :deep(.q-field__native) {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 </style>
