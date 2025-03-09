@@ -608,13 +608,13 @@ const generateTypstContent = () => {
         .join('\n')
 
       return `
-        #work(
-          title: "${work.title}",
-          company: "${work.company}",
-          location: "${work.location}",
-          dates: dates-helper(start-date: "${formatTypstDate(work.startDate)}", end-date: "${formatTypstDate(work.endDate)}"),
-        )
-        ${bulletPoints}`
+      #work(
+        title: "${work.title}",
+        company: "${work.company}",
+        location: "${work.location}",
+        dates: dates-helper(start-date: "${formatTypstDate(work.startDate)}", end-date: "${formatTypstDate(work.endDate)}"),
+      )
+      ${bulletPoints}`
     })
     .join('\n')
 
@@ -626,13 +626,13 @@ const generateTypstContent = () => {
         .join('\n')
 
       return `
-          #project(
-            name: "${project.name}",
-            role: "${project.role}",
-            dates: dates-helper(start-date: "${formatTypstDate(project.startDate)}", end-date: "${formatTypstDate(project.endDate)}"),
-            url: "${project.url}",
-          )
-          ${bulletPoints}`
+      #project(
+        name: "${project.name}",
+        role: "${project.role}",
+        dates: dates-helper(start-date: "${formatTypstDate(project.startDate)}", end-date: "${formatTypstDate(project.endDate)}"),
+        url: "${project.url}",
+        )
+        ${bulletPoints}`
     })
     .join('\n')
 
