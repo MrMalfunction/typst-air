@@ -1,5 +1,38 @@
 <template>
   <q-layout>
+    <q-header>
+      <q-toolbar>
+        <!-- Save Resume Button -->
+        <q-btn label="Save Resume" @click="openSaveDialog" color="primary" />
+        <q-space />
+        <!-- Dropdown to list resume names -->
+        <q-select
+          dense
+          square
+          borderless
+          v-model="selectedResumeName"
+          :options="allResumeNames"
+          label="Select Saved Resume"
+          @update:model-value="handleSelectResume"
+          style="max-width: 300px; width: 100%"
+          label-color="white"
+        />
+      </q-toolbar>
+    </q-header>
+
+    <!-- Dialog for asking a name for saving a resume -->
+    <q-dialog v-model="saveDialog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Enter Resume Name</div>
+          <q-input v-model="saveResumeName" label="Resume Name" autofocus dense outlined />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn flat label="Save" @click="handleSave" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-page-container>
       <q-page class="row no-wrap">
         <!-- Left side form -->
@@ -355,7 +388,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted, computed } from 'vue'
 import { $typst } from '@myriaddreamin/typst.ts/dist/esm/contrib/snippet.mjs'
 import renderUrl from '@myriaddreamin/typst-ts-renderer/pkg/typst_ts_renderer_bg.wasm?url'
 import compileUrl from '@myriaddreamin/typst-ts-web-compiler/pkg/typst_ts_web_compiler_bg.wasm?url'
@@ -366,6 +399,9 @@ import {
   convertBoldHtmlToTypstBold,
   convertHtmlToTypstLink,
 } from '../util/typst_conv.js'
+import { useResumeStore } from 'stores/resume-store'
+
+const resumeStore = useResumeStore() // initialize the resume store
 
 const typstFormatStore = useTypstFormatStore()
 const contentDiv = ref(null)
@@ -701,6 +737,41 @@ const previewSvg = async () => {
     }
   } catch (error) {
     console.error('Error previewing SVG:', error)
+  }
+}
+
+// New reactive variables for saving resume
+const saveDialog = ref(false)
+const saveResumeName = ref('')
+
+// Selected resume name for loading
+const selectedResumeName = ref('')
+const allResumeNames = computed(() => resumeStore.getAllResumeNames())
+
+const openSaveDialog = () => {
+  saveResumeName.value = personalInfo.name // default name; user can change it
+  saveDialog.value = true
+}
+
+const handleSave = () => {
+  // Use the name provided in the dialog to save the resume.
+  resumeStore.saveResume(saveResumeName.value, JSON.stringify(personalInfo))
+  console.log(`Resume saved under key: ${saveResumeName.value}`)
+  saveDialog.value = false
+  // Update selectedResumeName so that the QSelect reflects the new entry.
+  selectedResumeName.value = saveResumeName.value
+}
+
+// When the user selects a resume name from the dropdown, load that resume.
+const handleSelectResume = (name) => {
+  if (name) {
+    const savedData = resumeStore.loadResume(name)
+    if (savedData) {
+      Object.assign(personalInfo, JSON.parse(savedData))
+      console.log(`Resume loaded for key: ${name}`)
+    } else {
+      console.warn(`No resume found for key: ${name}`)
+    }
   }
 }
 
