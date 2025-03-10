@@ -18,7 +18,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       personal-site: "",
       orcid: "",
       accent-color: "#000000",
-      font: "New Computer Modern",
+      font: "Libertinus Serif",
       paper: "us-letter",
       body,
     ) = {
@@ -66,7 +66,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
         #set align(author-position)
         #set text(
           weight: 700,
-          size: 20pt,
+          size: 16pt,
         )
         #pad(it.body)
       ]
@@ -119,8 +119,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       bottom-right: "",
     ) = {
       [
-        #top-left #h(1fr) #top-right \\
-        #bottom-left #h(1fr) #bottom-right
+        #top-left #h(1fr) #top-right \\ #bottom-left #h(1fr) #bottom-right
       ]
     }
 
@@ -134,12 +133,18 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       ]
     }
 
-    // Cannot just use normal --- ligature becuase ligatures are disabled for good reasons
+    // Cannot just use normal --- ligature because ligatures are disabled for good reasons
     #let dates-helper(
       start-date: "",
       end-date: "",
     ) = {
-      start-date + " " + $dash.em$ + " " + end-date
+      if start-date == "" and end-date != "" {
+        end-date  // Only show end-date if start-date is missing
+      } else if start-date != "" and end-date != "" {
+        start-date + " " + $dash.em$ + " " + end-date  // Show both dates if both are present
+      } else {
+        start-date  // Show start-date if only start-date is present
+      }
     }
 
     // Section components below

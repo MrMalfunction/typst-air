@@ -629,7 +629,7 @@ const generateTypstContent = () => {
       #edu(
         institution: "${edu.institution}",
         location: "${edu.location}",
-        dates: dates-helper(start-date: "${formatTypstDate(edu.startDate)}", end-date: "${formatTypstDate(edu.endDate)}"),
+        dates: dates-helper(${edu.startDate ? `start-date: "${formatTypstDate(edu.startDate)}"` : ''}${edu.startDate && edu.endDate ? ', ' : ''}${edu.endDate ? `end-date: "${formatTypstDate(edu.endDate)}"` : ''}),
         degree: "${edu.degree}",
       )
       ${bulletPoints}`
@@ -664,11 +664,19 @@ const generateTypstContent = () => {
       return `
       #project(
         name: "${project.name}",
-        role: "${project.role}",
-        dates: dates-helper(start-date: "${formatTypstDate(project.startDate)}", end-date: "${formatTypstDate(project.endDate)}"),
-        url: "${project.url}",
-        )
-        ${bulletPoints}`
+        role: "${project.role}"${
+          project.startDate
+            ? `,
+        dates: dates-helper(start-date: "${formatTypstDate(project.startDate)}", end-date: "${formatTypstDate(project.endDate)}")`
+            : ''
+        }${
+          project.url
+            ? `,
+        url: "${project.url}"`
+            : ''
+        }
+      )
+      ${bulletPoints}`
     })
     .join('\n')
 
@@ -695,7 +703,7 @@ const generateTypstContent = () => {
       phone: phone,
       personal-site: personal-site,
       accent-color: "#26428b",
-      font: "New Computer Modern",
+      font: "Libertinus Serif",
       paper: "us-letter",
       author-position: center,
       personal-info-position: center,
@@ -711,7 +719,7 @@ const generateTypstContent = () => {
     ${projectsSection}
 
     == Skills
-        ${skillsSection}
+    ${skillsSection}
   `
 }
 
