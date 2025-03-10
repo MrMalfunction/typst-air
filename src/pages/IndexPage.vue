@@ -106,7 +106,11 @@
                         <q-input v-model="element.location" label="Location" outlined required />
                       </div>
                       <div class="col-6">
-                        <q-input v-model="element.startDate" label="Start Date" outlined required />
+                        <q-input
+                          v-model="element.startDate"
+                          label="Start Date (Optional)"
+                          outlined
+                        />
                       </div>
                       <div class="col-6">
                         <q-input v-model="element.endDate" label="End Date" outlined required />
@@ -201,6 +205,7 @@
                           <div class="row q-col-gutter-sm items-center q-mb-sm">
                             <div class="col">
                               <q-editor
+                                @paste="handleEditorPaste"
                                 v-model="element.points[pointIndex]"
                                 :toolbar="[['bold'], ['link'], ['undo', 'redo']]"
                                 :fonts="{ arial: 'Arial' }"
@@ -272,16 +277,21 @@
                         <q-input v-model="element.url" label="Project URL (Optional)" outlined />
                       </div>
                       <div class="col-6">
-                        <q-input v-model="element.startDate" label="Start Date" outlined required />
+                        <q-input
+                          v-model="element.startDate"
+                          label="Start Date (Optional)"
+                          outlined
+                        />
                       </div>
                       <div class="col-6">
-                        <q-input v-model="element.endDate" label="End Date" outlined required />
+                        <q-input v-model="element.endDate" label="End Date (Optional)" outlined />
                       </div>
                       <div class="col-12">
                         <div v-for="(point, pointIndex) in element.points" :key="pointIndex">
                           <div class="row q-col-gutter-sm items-center q-mb-sm">
                             <div class="col">
                               <q-editor
+                                @paste="handleEditorPaste"
                                 v-model="element.points[pointIndex]"
                                 :toolbar="[['bold'], ['link'], ['undo', 'redo']]"
                                 :fonts="{ arial: 'Arial' }"
@@ -800,6 +810,36 @@ const exportPdf = async () => {
   link.target = '_blank'
   link.click()
   URL.revokeObjectURL(link.href)
+}
+
+const handleEditorPaste = (e) => {
+  // Prevent default browser paste behavior
+  e.preventDefault()
+  e.stopPropagation()
+
+  // Get plain text from clipboard
+  let text = ''
+  if (e.clipboardData) {
+    text = e.clipboardData.getData('text/plain')
+  } else if (window.clipboardData) {
+    text = window.clipboardData.getData('text')
+  }
+
+  // Strip all HTML tags
+  text = text.replace(/<[^>]*>/g, '')
+
+  // Also remove any HTML entities (like &nbsp;, &lt;, etc.)
+  text = text.replace(/&[^;]+;/g, ' ')
+
+  // Remove newlines
+  text = text.replace(/\n/g, '')
+
+  console.log('Pasted text:', text)
+
+  // Insert clean text at cursor position
+  setTimeout(() => {
+    document.execCommand('insertText', false, text)
+  }, 0)
 }
 
 const handleExport = () => exportPdf()
