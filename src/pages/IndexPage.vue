@@ -1,42 +1,32 @@
 <template>
   <q-layout>
-    <q-header>
-      <q-toolbar>
-        <!-- Save Resume Button -->
-        <q-btn label="Save Resume" @click="openSaveDialog" color="primary" />
-        <q-space />
-        <!-- Dropdown to list resume names -->
-        <q-select
-          dense
-          square
-          borderless
-          v-model="selectedResumeName"
-          :options="allResumeNames"
-          label="Select Saved Resume"
-          @update:model-value="handleSelectResume"
-          style="max-width: 300px; width: 100%"
-          label-color="white"
-        />
-      </q-toolbar>
-    </q-header>
-
-    <!-- Dialog for asking a name for saving a resume -->
-    <q-dialog v-model="saveDialog">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Enter Resume Name</div>
-          <q-input v-model="saveResumeName" label="Resume Name" autofocus dense outlined />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Save" @click="handleSave" color="primary" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
     <q-page-container>
       <q-page class="row no-wrap">
         <!-- Left side form -->
         <div class="col form-container q-pa-md">
+          <!-- Save Resume Controls - moved from header to top of form -->
+          <div class="row q-col-gutter-md q-mb-md">
+            <div class="col-6">
+              <q-btn
+                label="Save Resume"
+                @click="openSaveDialog"
+                color="primary"
+                class="full-width"
+              />
+            </div>
+            <div class="col-6">
+              <!-- Dropdown to list resume names -->
+              <q-select
+                dense
+                outlined
+                v-model="selectedResumeName"
+                :options="allResumeNames"
+                label="Select Saved Resume"
+                @update:model-value="handleSelectResume"
+              />
+            </div>
+          </div>
+
           <div class="text-h6">Personal Information</div>
           <div class="row q-col-gutter-md">
             <div class="col-12">
@@ -384,16 +374,29 @@
 
         <!-- Right side preview -->
         <div class="col preview-container q-pa-md">
-          <div ref="contentDiv" class="svg-container"></div>
-          <q-btn
-            color="primary"
-            label="Export to PDF"
-            class="q-mt-md full-width"
-            @click="handleExport"
-          />
+          <div class="preview-scroll-container">
+            <div ref="contentDiv" class="svg-container"></div>
+          </div>
+          <div class="export-button-container">
+            <q-btn color="primary" label="Export to PDF" class="full-width" @click="handleExport" />
+          </div>
         </div>
       </q-page>
     </q-page-container>
+
+    <!-- Dialog for asking a name for saving a resume -->
+    <q-dialog v-model="saveDialog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Enter Resume Name</div>
+          <q-input v-model="saveResumeName" label="Resume Name" autofocus dense outlined />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn flat label="Save" @click="handleSave" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -802,16 +805,22 @@ watch(
 )
 
 const exportPdf = async () => {
-  const typstContent = generateTypstContent()
-  const pdfData = await $typst.pdf({ mainContent: typstContent })
-  const pdfFile = new Blob([pdfData], { type: 'application/pdf' })
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(pdfFile)
-  link.target = '_blank'
-  link.click()
-  URL.revokeObjectURL(link.href)
+  try {
+    // Generate the Typst content
+    const typstContent = generateTypstContent()
+    // Compile to PDF
+    const pdfData = await $typst.pdf({ mainContent: typstContent })
+    // Create a blob from the PDF data
+    const pdfBlob = new Blob([pdfData], { type: 'application/pdf' })
+    // Create a blob URL
+    const blobUrl = URL.createObjectURL(pdfBlob)
+    // Open PDF in a new tab
+    window.open(blobUrl, '_blank')
+  } catch (error) {
+    console.error('PDF export failed:', error)
+    alert('Failed to generate PDF. Please try again.')
+  }
 }
-
 const handleEditorPaste = (e) => {
   // Prevent default browser paste behavior
   e.preventDefault()
@@ -891,5 +900,19 @@ onMounted(async () => {
 .skills-input :deep(.q-field__native) {
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+.preview-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 10px;
+}
+
+.export-button-container {
+  position: sticky;
+  bottom: 10px;
+  padding-top: 10px;
+  background-color: white;
+  z-index: 2;
 }
 </style>
