@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-export const usePersonalInfoStore = defineStore('personal_info', {
+export const usePersonalInfoStore = defineStore('personalInfo', {
   state: () => ({
     name: 'Stephen Xu',
     location: 'San Diego, CA',

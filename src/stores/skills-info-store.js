@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-export const useSkillsInfoStore = defineStore('skills_store', {
+export const useSkillsInfoStore = defineStore('skillsInfo', {
   state: () => ({
     skills: [
       {

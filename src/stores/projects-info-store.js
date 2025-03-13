@@ -1,7 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatBulletPoint, formatTypstDate } from 'src/util/format_bullet_points.js'
 
-export const useProjectInfoStore = defineStore('project_info', {
+export const useProjectInfoStore = defineStore('projectInfo', {
   state: () => ({
     projects: [
       {

@@ -1,7 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatTypstDate } from 'src/util/format_bullet_points.js'
 
-export const useEducationInfoStore = defineStore('education_info', {
+export const useEducationInfoStore = defineStore('educationInfo', {
   state: () => ({
     education: [
       {

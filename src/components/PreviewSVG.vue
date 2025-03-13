@@ -9,6 +9,7 @@ import { useProjectInfoStore } from 'stores/projects-info-store.js'
 import { useSkillsInfoStore } from 'stores/skills-info-store.js'
 import { usePersonalInfoStore } from 'stores/personal-info-store.js'
 import { useTypstFormatStore } from 'stores/typst-format-store.js'
+import { Notify } from 'quasar'
 
 const personalInfoStore = usePersonalInfoStore()
 const educationInfoStore = useEducationInfoStore()
@@ -117,6 +118,10 @@ const previewSvg = async () => {
     }
   } catch (error) {
     console.error('Error previewing SVG:', error)
+    Notify.create({
+      type: 'negative',
+      message: 'Error previewing SVG: ' + error.message,
+    })
   }
 }
 
@@ -134,7 +139,10 @@ const exportPdf = async () => {
     window.open(blobUrl, '_blank')
   } catch (error) {
     console.error('PDF export failed:', error)
-    alert('Failed to generate PDF. Please try again.')
+    Notify.create({
+      type: 'negative',
+      message: 'PDF export failed, pls try again',
+    })
   }
 }
 
