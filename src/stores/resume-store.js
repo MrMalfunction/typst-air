@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useResumeStore = defineStore('resume', {
   state: () => ({
     savedResumes: {},
-    currentResumeName: ''
+    currentResumeName: '',
   }),
 
   actions: {
@@ -25,8 +25,8 @@ export const useResumeStore = defineStore('resume', {
 
     getAllResumeNames() {
       return Object.keys(this.savedResumes)
-    }
+    },
   },
 
-  persist: true
+  persist: true,
 })

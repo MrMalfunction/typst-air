@@ -5,8 +5,8 @@
   <button @click="handleExport">Export to PDF</button>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+<script lang="ts" setup>
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { $typst } from '@myriaddreamin/typst.ts/dist/esm/contrib/snippet.mjs'
 import renderUrl from '@myriaddreamin/typst-ts-renderer/pkg/typst_ts_renderer_bg.wasm?url'
 import compileUrl from '@myriaddreamin/typst-ts-web-compiler/pkg/typst_ts_web_compiler_bg.wasm?url'
