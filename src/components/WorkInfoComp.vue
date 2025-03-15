@@ -94,6 +94,12 @@ const restoreWorkPoints = (index) => {
     work.value[index].points = JSON.parse(JSON.stringify(workBackups.value[workId]))
   }
 }
+
+const openAiPopup = (company, points) => {
+  showPopup.value = true;
+  selectedCompanyName.value = company;
+  selectedStringsArray.value = points;
+}
 </script>
 
 <template>
@@ -145,11 +151,7 @@ const restoreWorkPoints = (index) => {
                   label="AI"
                   push
                   size="size-md"
-                  @click="
-                    showPopup = true
-                    selectedCompanyName = element.company
-                    selectedStringsArray = element.points
-                  "
+                  @click="openAiPopup(element.company, element.points)"
                 >
                   <img alt="AI Button" height="32px" src="../assets/ai-icon.png" width="32px" />
                   <q-tooltip>Fine Tune points to a job.</q-tooltip>
