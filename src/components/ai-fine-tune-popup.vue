@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineEmits, defineProps, onMounted, ref } from 'vue'
+import { computed, defineEmits, defineProps, onMounted, ref, watch } from 'vue'
 import { useJobsStore } from 'src/stores/jobs-store'
 import { api } from 'boot/axios.js'
 import { useQuasar } from 'quasar'
@@ -11,13 +11,19 @@ const props = defineProps({
   stringsArray: Array,
 })
 const isVisible = ref(true)
-const emit = defineEmits(['updateStrings'])
+const emit = defineEmits(['updateStrings', 'dialogStatus'])
 
 const jobsStore = useJobsStore()
 const selectedJob = ref(null)
 const showNewJobForm = ref(false)
 const isAddingJob = ref(false)
 const isSubmitting = ref(false)
+
+watch(isVisible, (newValue) => {
+  if (newValue === false) {
+    emit('dialogStatus', false)
+  }
+})
 
 // Simplified new job details
 const newJob = ref({

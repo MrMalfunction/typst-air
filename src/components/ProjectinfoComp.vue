@@ -97,9 +97,9 @@ const restoreProjectPoints = (index) => {
 }
 
 const openAiPopup = (company, points) => {
-  showPopup.value = true;
-  selectedProjectName.value = company;
-  selectedStringsArray.value = points;
+  showPopup.value = true
+  selectedProjectName.value = company
+  selectedStringsArray.value = points
 }
 </script>
 
@@ -151,7 +151,7 @@ const openAiPopup = (company, points) => {
                   label="AI"
                   push
                   size="size-md"
-                  @click="openAiPopup(element.company, element.points)"
+                  @click="openAiPopup(element.name, element.points)"
                 >
                   <img alt="AI Button" height="32px" src="../assets/ai-icon.png" width="32px" />
                   <q-tooltip>Fine Tune points to a job.</q-tooltip>
