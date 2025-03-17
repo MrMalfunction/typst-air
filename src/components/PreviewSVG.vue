@@ -166,7 +166,13 @@ onMounted(async () => {
   <!-- Right side preview -->
   <div class="col preview-container q-pa-md">
     <div class="preview-scroll-container">
-      <div ref="contentDiv" class="svg-container"></div>
+      <p class="text-subtitle2 text-grey text-center">
+        All of the text below is selectable and copyable.
+      </p>
+      <div ref="contentDiv" class="svg-container">
+        <!-- SVG content will be rendered here -->
+        Renderer is loading. Please Wait.
+      </div>
     </div>
     <div class="export-button-container">
       <q-btn class="full-width" color="primary" label="Export to PDF" @click="handleExport" />

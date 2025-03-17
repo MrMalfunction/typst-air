@@ -96,9 +96,9 @@ const restoreWorkPoints = (index) => {
 }
 
 const openAiPopup = (company, points) => {
-  showPopup.value = true;
-  selectedCompanyName.value = company;
-  selectedStringsArray.value = points;
+  showPopup.value = true
+  selectedCompanyName.value = company
+  selectedStringsArray.value = points
 }
 </script>
 
@@ -143,6 +143,7 @@ const openAiPopup = (company, points) => {
                   color="warning"
                   icon="restore"
                   size="sm"
+                  push
                   @click="restoreWorkPoints(index)"
                 >
                   <q-tooltip>Restore original points</q-tooltip>

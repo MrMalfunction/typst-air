@@ -143,6 +143,7 @@ const openAiPopup = (company, points) => {
                   color="warning"
                   icon="restore"
                   size="sm"
+                  push
                   @click="restoreProjectPoints(index)"
                 >
                   <q-tooltip>Restore original points</q-tooltip>

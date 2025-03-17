@@ -1,5 +1,6 @@
 <template>
   <q-layout>
+    <HeaderComp />
     <q-page-container>
       <q-page class="row no-wrap">
         <!-- Left side form -->
@@ -21,10 +22,18 @@
         <PreviewSVG />
       </q-page>
     </q-page-container>
+    <q-footer class="bg-white text-grey-8">
+      <q-toolbar class="justify-center">
+        <router-link class="text-grey-8 text-decoration-none" to="/acknowledgments">
+          Third-Party Acknowledgments
+        </router-link>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
 <script setup>
+import HeaderComp from 'components/HeaderComp.vue'
 import PersonalInfoComp from 'components/PersonalInfoComp.vue'
 import EduInfoComp from 'components/EduInfoComp.vue'
 import WorkInfoComp from 'components/WorkInfoComp.vue'
@@ -32,7 +41,6 @@ import ProjectInfoComp from 'components/ProjectinfoComp.vue'
 import SkillsInfoComp from 'components/SkillsInfoComp.vue'
 import PreviewSVG from 'components/PreviewSVG.vue'
 import SaveComp from 'components/SaveComp.vue'
-// Selected resume name for loading
 </script>
 
 <style scoped>
@@ -40,9 +48,6 @@ import SaveComp from 'components/SaveComp.vue'
   height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.form-container {
   overflow-y: auto;
 }
 </style>
