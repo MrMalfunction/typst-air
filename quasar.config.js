@@ -2,6 +2,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
 import { defineConfig } from '#q-app/wrappers'
+import removeConsole from 'vite-plugin-remove-console'
 
 export default defineConfig((/* ctx */) => {
   return {
@@ -67,6 +68,7 @@ export default defineConfig((/* ctx */) => {
           },
           { server: false },
         ],
+        [removeConsole(), { server: false }],
       ],
     },
 
