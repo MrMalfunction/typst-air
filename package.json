@@ -1,8 +1,8 @@
 {
-  "name": "typst-air",
+  "name": "ai-resume-creator",
   "version": "0.0.1",
-  "description": "TYPST AIR",
-  "productName": "TYPST AIR",
+  "description": "AI Resume Tuner",
+  "productName": "AI Resume Tuner",
   "author": "Amol Bohora <24508987+MrMalfunction@users.noreply.github.com>",
   "type": "module",
   "private": true,
