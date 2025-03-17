@@ -10,7 +10,7 @@
 const corsHeaders = {
 	'Access-Control-Allow-Headers': 'Content-Type',
 	'Access-Control-Allow-Methods': 'POST',
-	'Access-Control-Allow-Origin': ['https://typst-air.pages.dev'],
+	'Access-Control-Allow-Origin': ['https://air.amolbohora.com'],
 	'Content-Type': 'application/json',
 	'Access-Control-Allow-Credentials': 'true',
 };
