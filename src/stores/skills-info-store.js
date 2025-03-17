@@ -6,13 +6,25 @@ export const useSkillsInfoStore = defineStore('skillsInfo', {
       {
         id: 1,
         heading: 'Programming Languages',
-        content: 'JavaScript, Python, C/C++, HTML/CSS, Java, Bash, R, Flutter, Dart',
+        content: 'C, C++, React, Vue, Java, Python, Go, TypeScript, JavaScript, HTML, CSS, SQL.',
       },
       {
         id: 2,
-        heading: 'Technologies',
+        heading: 'Web/Mobile Development',
         content:
-          'React, Astro, Svelte, Tailwind CSS, Git, UNIX, Docker, Caddy, NGINX, Google Cloud Platform',
+          'React JS, Vue JS, AngularJS, RxJS, FastAPI, iOS, Django, JSON',
+      },
+      {
+        id: 3,
+        heading: 'Framework & Tools',
+        content:
+          'Docker, Git, Jira, Jenkins, JUnit, GitHub Actions, Django ORM, PyTest, SQLAlchemy, PostgreSQL.',
+      },
+      {
+        id: 4,
+        heading: 'Cloud Technologies',
+        content:
+          'AWS (EC2, Lambda, DynamoDB, CloudFront, S3, API Gateway), Cloudflare, Azure, Google Cloud.',
       },
     ],
   }),

@@ -7,13 +7,14 @@ export const useWorkInfoStore = defineStore('workInfo', {
       {
         id: 1,
         title: 'Software Engineer',
-        company: 'Tech Company',
-        location: 'San Francisco, CA',
-        startDate: 'Jan 2023',
+        company: 'Northeastern University',
+        location: 'Boston, MA',
+        startDate: 'Jan 2024',
         endDate: 'Present',
         points: [
-          'Led development of core platform features',
-          'Managed team of 3 junior developers',
+          'Led SupplyTrace’s backend migration from Django to FastAPI, improving API response times by 19% and cutting server usage by 15%. Optimized PostgreSQL performance by 7% while enhancing documentation and adopting Scrum for better team collaboration.',
+          'Designed and implemented ETL pipelines with Prefect/Airflow on university HPC systems using Slurm, increasing data processing reliability by 25%.',
+          'Configured cloud infrastructure and CI/CD pipelines, improving operational efficiency by 15%.'
         ],
       },
     ],

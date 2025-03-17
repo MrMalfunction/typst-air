@@ -6,14 +6,13 @@ export const useEducationInfoStore = defineStore('educationInfo', {
     education: [
       {
         id: 1,
-        institution: 'Harvey Mudd College',
-        location: 'Claremont, CA',
-        startDate: 'Aug 2023',
-        endDate: 'May 2027',
-        degree: "Bachelor's of Science, Computer Science and Mathematics",
+        institution: 'Northeastern University',
+        location: 'Boston, MA',
+        startDate: 'September 2023',
+        endDate: 'December 2025',
+        degree: "Bachelor's of Science, Computer Science ",
         points: [
-          'Relevant coursework: Data Structures, Algorithms, Computer Systems',
-          'Member of ACM student chapter',
+          'Relevant coursework: Program Design Paradigm, Building Scalable Distributed Systems, Algorithms, Cloud Computing, Data Mining Techniques, iOS Development, Human-Computer Interaction.',
         ],
       },
     ],

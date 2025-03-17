@@ -21,6 +21,13 @@
               >Artificial intelligence icons created by Smashicons - Flaticon</a
             >
           </div>
+          <div class="q-mb-lg icon-attribution">
+            <a
+              href="https://github.com/stuxf/basic-typst-resume-template?tab=Unlicense-1-ov-file"
+              title="resume format"
+            >Resume Format [Derived From]</a
+            >
+          </div>
 
           <div class="row q-col-gutter-md">
             <div
