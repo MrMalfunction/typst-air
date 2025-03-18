@@ -157,7 +157,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
     ) = {
       generic-two-by-two(
         top-left: strong(institution),
-        top-right: dates,
+        top-right: strong(dates),
         bottom-left: emph(degree),
         bottom-right: emph(location),
       )
@@ -187,7 +187,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
     ) = {
       generic-two-by-two(
         top-left: strong(title),
-        top-right: dates,
+        top-right: strong(dates),
         bottom-left: company,
         bottom-right: emph(location),
       )
@@ -211,7 +211,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
           if dates == "" and url != "" {
             link("https://" + url)[#url]
           } else {
-            dates
+            strong(dates)
           }
         },
       )
