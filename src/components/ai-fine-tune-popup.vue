@@ -126,7 +126,7 @@ const handleButtonClick = async () => {
       console.error('Response is missing parsedPoints:', response.data)
     }
   } catch (error) {
-    const errorMessage = error.message || 'An error occurred while processing your request'
+    const errorMessage = error.message || 'An error occurred while processing your request, pls try again.'
     $q.notify({
       type: 'negative',
       message: `${errorMessage}`,
