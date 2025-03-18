@@ -111,7 +111,9 @@ const openAiPopup = (company, points) => {
         <q-card class="q-pa-md">
           <div class="row q-col-gutter-md">
             <div class="col-12 row items-center">
-              <q-btn class="drag-handle" flat icon="drag_indicator" round />
+              <q-btn class="drag-handle" flat icon="drag_indicator" round >
+                <q-tooltip hove>Drag and rearrange order</q-tooltip>
+              </q-btn>
               <q-btn
                 class="q-ml-auto"
                 color="negative"
