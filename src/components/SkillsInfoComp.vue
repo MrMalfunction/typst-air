@@ -32,19 +32,6 @@ const removeSkill = (index) => {
       <template #item="{ element, index }">
         <q-card class="q-pa-md">
           <div class="row q-col-gutter-md">
-            <div class="col-12 row items-center">
-              <q-btn class="drag-handle" flat icon="drag_indicator" round >
-                <q-tooltip hove>Drag and rearrange order</q-tooltip>
-              </q-btn>
-              <q-btn
-                class="q-ml-auto"
-                color="negative"
-                flat
-                icon="delete"
-                round
-                @click="removeSkill(index)"
-              />
-            </div>
             <div class="col-12">
               <q-input v-model="element.heading" label="Category" outlined required />
             </div>
@@ -59,6 +46,21 @@ const removeSkill = (index) => {
                 type="textarea"
               />
             </div>
+          </div>
+          <div class="col-12 row items-center">
+            <q-btn class="drag-handle" flat icon="drag_indicator" round >
+              <q-tooltip hove>Drag and rearrange order</q-tooltip>
+            </q-btn>
+            <q-btn
+              class="q-ml-auto"
+              color="negative"
+              flat
+              icon="delete"
+              round
+              @click="removeSkill(index)"
+            >
+              <q-tooltip>Delete Entry</q-tooltip>
+            </q-btn>
           </div>
         </q-card>
       </template>

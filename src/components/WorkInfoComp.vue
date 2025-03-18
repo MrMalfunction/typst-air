@@ -110,19 +110,6 @@ const openAiPopup = (company, points) => {
       <template #item="{ element, index }">
         <q-card class="q-pa-md">
           <div class="row q-col-gutter-md">
-            <div class="col-12 row items-center">
-              <q-btn class="drag-handle" flat icon="drag_indicator" round >
-                <q-tooltip hove>Drag and rearrange order</q-tooltip>
-              </q-btn>
-              <q-btn
-                class="q-ml-auto"
-                color="negative"
-                flat
-                icon="delete"
-                round
-                @click="removeWork(index)"
-              />
-            </div>
             <div class="col-12">
               <q-input v-model="element.title" label="Position Title" outlined required />
             </div>
@@ -192,6 +179,21 @@ const openAiPopup = (company, points) => {
                 @click="addWorkBulletPoint(index)"
               />
             </div>
+          </div>
+          <div class="col-12 row items-center">
+            <q-btn class="drag-handle" flat icon="drag_indicator" round >
+              <q-tooltip hove>Drag and rearrange order</q-tooltip>
+            </q-btn>
+            <q-btn
+              class="q-ml-auto"
+              color="negative"
+              flat
+              icon="delete"
+              round
+              @click="removeWork(index)"
+            >
+              <q-tooltip>Delete Entry</q-tooltip>
+            </q-btn>
           </div>
         </q-card>
       </template>

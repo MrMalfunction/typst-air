@@ -59,21 +59,11 @@ const removeBulletPoint = (educationIndex, pointIndex) => {
       <template #item="{ element, index }">
         <q-card class="q-pa-md">
           <div class="row q-col-gutter-md">
-            <div class="col-12 row items-center">
-              <q-btn class="drag-handle" flat icon="drag_indicator" round >
-                <q-tooltip hove>Drag and rearrange order</q-tooltip>
-              </q-btn>
-              <q-btn
-                class="q-ml-auto"
-                color="negative"
-                flat
-                icon="delete"
-                round
-                @click="removeEducation(index)"
-              />
-            </div>
             <div class="col-12">
               <q-input v-model="element.institution" label="Institution" outlined required />
+            </div>
+            <div class="col-12">
+              <q-input v-model="element.degree" label="Degree" outlined required />
             </div>
             <div class="col-12">
               <q-input v-model="element.location" label="Location" outlined required />
@@ -83,9 +73,6 @@ const removeBulletPoint = (educationIndex, pointIndex) => {
             </div>
             <div class="col-6">
               <q-input v-model="element.endDate" label="End Date" outlined required />
-            </div>
-            <div class="col-12">
-              <q-input v-model="element.degree" label="Degree" outlined required />
             </div>
             <div class="col-12">
               <div v-for="(_, pointIndex) in element.points" :key="pointIndex">
@@ -119,6 +106,21 @@ const removeBulletPoint = (educationIndex, pointIndex) => {
                 @click="addBulletPoint(index)"
               />
             </div>
+          </div>
+          <div class="col-12 row items-center">
+            <q-btn class="drag-handle" flat icon="drag_indicator" round >
+              <q-tooltip hove>Drag and rearrange order</q-tooltip>
+            </q-btn>
+            <q-btn
+              class="q-ml-auto"
+              color="negative"
+              flat
+              icon="delete"
+              round
+              @click="removeEducation(index)"
+            >
+              <q-tooltip>Delete Entry</q-tooltip>
+            </q-btn>
           </div>
         </q-card>
       </template>

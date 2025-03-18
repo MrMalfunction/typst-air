@@ -191,6 +191,7 @@ onMounted(async () => {
   flex: 1;
   overflow: auto;
   width: 100%;
+  border: #1d1d1d solid 1px;
 }
 
 .skills-input :deep() {
