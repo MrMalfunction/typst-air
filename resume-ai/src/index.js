@@ -82,7 +82,7 @@ export default {
 						'content-type': 'application/json',
 					},
 					body: JSON.stringify({
-						model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+						model: 'llama3-70b-8192',
 						messages: ai_message_body,
 						temperature: 0.5,
 						max_completion_tokens: 1000,
