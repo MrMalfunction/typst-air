@@ -19,7 +19,7 @@
     "@myriaddreamin/typst-ts-web-compiler": "0.5.5-rc7",
     "@myriaddreamin/typst.ts": "0.5.5-rc7",
     "@quasar/extras": "^1.16.4",
-    "axios": "^1.2.1",
+    "axios": "^1.8.4",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "quasar": "^2.16.0",

@@ -8,6 +8,7 @@
           <!-- Save Resume Controls - moved from header to top of form -->
           <div class="row q-col-gutter-md q-mb-md">
             <SaveComp />
+            <StyleOptionsComp />
           </div>
 
           <div class="text-h6">Personal Information</div>
@@ -41,6 +42,7 @@ import ProjectInfoComp from 'components/ProjectinfoComp.vue'
 import SkillsInfoComp from 'components/SkillsInfoComp.vue'
 import PreviewSVG from 'components/PreviewSVG.vue'
 import SaveComp from 'components/SaveComp.vue'
+import StyleOptionsComp from 'components/StyleOptionsComp.vue'
 </script>
 
 <style scoped>

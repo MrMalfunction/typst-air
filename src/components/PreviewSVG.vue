@@ -10,13 +10,15 @@ import { useSkillsInfoStore } from 'stores/skills-info-store.js'
 import { usePersonalInfoStore } from 'stores/personal-info-store.js'
 import { useTypstFormatStore } from 'stores/typst-format-store.js'
 import { Notify } from 'quasar'
+import { preloadRemoteFonts } from '@myriaddreamin/typst.ts'
+import { useStyleStore } from 'stores/style-store.js'
 
 const personalInfoStore = usePersonalInfoStore()
 const educationInfoStore = useEducationInfoStore()
 const workInfoStore = useWorkInfoStore()
 const projectInfoStore = useProjectInfoStore()
 const skillsInfoStore = useSkillsInfoStore()
-
+const styleStore = useStyleStore()
 const typstFormatStore = useTypstFormatStore()
 
 const contentDiv = ref(null)
@@ -46,6 +48,11 @@ skillsInfoStore.$subscribe(() => {
   previewSvg()
 })
 
+styleStore.$subscribe(() => {
+  console.log('Style values updated')
+  previewSvg()
+})
+
 const generateTypstContent = () => {
   console.log('Generating TYPST content')
   console.log()
@@ -58,7 +65,10 @@ const generateTypstContent = () => {
 
   const skillsSection = skillsInfoStore.formatTYPST()
 
+  const fontSize = styleStore.fontSizePt;
+  const colorCheck = styleStore.colorCheck ? "#26428b" : "#000000";
   return `
+    #set text(size: ${fontSize}pt)
     ${typstFormatStore.getTypstFormat}
     #let name = "${personalInfoStore.name}"
     #let location = "${personalInfoStore.location}"
@@ -67,6 +77,9 @@ const generateTypstContent = () => {
     #let github = "${personalInfoStore.github}"
     #let linkedin = "${personalInfoStore.linkedin}"
     #let personal-site = "${personalInfoStore.personalSite}"
+    #set text(
+      font: "Times New Roman" // Useless as loaded font is used.
+    )
 
     #show: resume.with(
       author: name,
@@ -77,7 +90,7 @@ const generateTypstContent = () => {
       phone: phone,
       personal-site: personal-site,
       accent-color: "#26428b",
-      font: "Libertinus Serif",
+      heading-color: "${colorCheck}",
       paper: "us-letter",
       author-position: center,
       personal-info-position: center,
@@ -151,9 +164,11 @@ const handleExport = () => exportPdf()
 onMounted(async () => {
   $typst.setRendererInitOptions({
     getModule: () => new URL(renderUrl, import.meta.url),
+    beforeBuild: [preloadRemoteFonts(['fonts/times.ttf', 'fonts/times-bold.ttf'])],
   })
   $typst.setCompilerInitOptions({
     getModule: () => new URL(compileUrl, import.meta.url),
+    beforeBuild: [preloadRemoteFonts(['fonts/times.ttf', 'fonts/times-bold.ttf'])],
   })
 
   await previewSvg()

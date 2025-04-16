@@ -3,8 +3,6 @@ import { defineStore } from 'pinia'
 export const useTypstFormatStore = defineStore('typstFormat', {
   state: () => ({
     typstFormat: `
-    #import "@preview/scienceicons:0.0.6": orcid-icon
-
     #let resume(
       author: "",
       author-position: left,
@@ -17,7 +15,8 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       phone: "",
       personal-site: "",
       orcid: "",
-      accent-color: "#000000",
+      accent-color: "#26428b",
+      heading-color: "#26428b",
       font: "Libertinus Serif",
       paper: "us-letter",
       body,
@@ -30,7 +29,6 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       set text(
         // LaTeX style font
         font: font,
-        size: 10pt,
         lang: "en",
         // Disable ligatures so ATS systems do not get confused when parsing fonts.
         ligatures: false
@@ -54,7 +52,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
 
       // Accent Color Styling
       show heading: set text(
-        fill: rgb(accent-color),
+        fill: rgb(heading-color),
       )
 
       show link: set text(
@@ -75,10 +73,10 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       [= #(author)]
 
       // Personal Info Helper
-      let contact-item(value, prefix: "", link-type: "") = {
+      let contact-item(value, link-type: "") = {
         if value != "" {
           if link-type != "" {
-            link(link-type + value)[#(prefix + value)]
+            link("https://" + value)[#(link-type)]
           } else {
             value
           }
@@ -94,13 +92,12 @@ export const useTypstFormatStore = defineStore('typstFormat', {
               contact-item(pronouns),
               contact-item(phone),
               contact-item(location),
-              contact-item(email, link-type: "mailto:"),
-              contact-item(github, link-type: "https://"),
-              contact-item(linkedin, link-type: "https://"),
-              contact-item(personal-site, link-type: "https://"),
-              contact-item(orcid, prefix: [#orcid-icon(color: rgb("#AECD54"))orcid.org/], link-type: "https://orcid.org/"),
+              contact-item(email, link-type: "Email"),
+              contact-item(github, link-type: "Github"),
+              contact-item(linkedin, link-type: "LinkedIn"),
+              contact-item(personal-site, link-type: "Website"),
             )
-            items.filter(x => x != none).join(" | ")
+            items.filter(x => x != none).join("  |  ")
           }
         ],
       )
@@ -186,9 +183,9 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       location: "",
     ) = {
       generic-two-by-two(
-        top-left: strong(title),
+        top-left: strong(company),
         top-right: strong(dates),
-        bottom-left: company,
+        bottom-left: title,
         bottom-right: emph(location),
       )
     }
