@@ -5,6 +5,7 @@ export const useStyleStore = defineStore('styleStore', {
     fontSizePt: 10,
     colorCheck: true,
   }),
+  persist: true,
 })
 
 if (import.meta.hot) {
