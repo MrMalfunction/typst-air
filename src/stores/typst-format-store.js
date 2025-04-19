@@ -92,7 +92,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
               contact-item(pronouns),
               contact-item(phone),
               contact-item(location),
-              contact-item(email, link-type: "Email"),
+              contact-item(email, link-type: email),
               contact-item(github, link-type: "Github"),
               contact-item(linkedin, link-type: "LinkedIn"),
               contact-item(personal-site, link-type: "Website"),
