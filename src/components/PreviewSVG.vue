@@ -65,8 +65,8 @@ const generateTypstContent = () => {
 
   const skillsSection = skillsInfoStore.formatTYPST()
 
-  const fontSize = styleStore.fontSizePt;
-  const colorCheck = styleStore.colorCheck ? "#26428b" : "#000000";
+  const fontSize = styleStore.fontSizePt
+  const colorCheck = styleStore.colorCheck ? '#26428b' : '#000000'
   return `
     #set text(size: ${fontSize}pt)
     ${typstFormatStore.getTypstFormat}
@@ -146,10 +146,24 @@ const exportPdf = async () => {
     const pdfData = await $typst.pdf({ mainContent: typstContent })
     // Create a blob from the PDF data
     const pdfBlob = new Blob([pdfData], { type: 'application/pdf' })
-    // Create a blob URL
-    const blobUrl = URL.createObjectURL(pdfBlob)
-    // Open PDF in a new tab
-    window.open(blobUrl, '_blank')
+
+    // Create a filename from user's name or use a default
+    let fileName = personalInfoStore.name.trim() || 'Resume'
+    // Clean the filename by replacing spaces with underscores and removing special characters
+    fileName = fileName.replace(/[^\w\s-]/g, '').replace(/\s+/g, ' ') + ' Resume.pdf'
+
+    // Create a download link
+    const downloadLink = document.createElement('a')
+    downloadLink.href = URL.createObjectURL(pdfBlob)
+    downloadLink.download = fileName
+
+    // Append to the body, click and remove
+    document.body.appendChild(downloadLink)
+    downloadLink.click()
+    document.body.removeChild(downloadLink)
+
+    // Clean up the object URL
+    URL.revokeObjectURL(downloadLink.href)
   } catch (error) {
     console.error('PDF export failed:', error)
     Notify.create({
