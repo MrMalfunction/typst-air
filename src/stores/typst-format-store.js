@@ -31,7 +31,8 @@ export const useTypstFormatStore = defineStore('typstFormat', {
         font: font,
         lang: "en",
         // Disable ligatures so ATS systems do not get confused when parsing fonts.
-        ligatures: false
+        ligatures: false,
+        hyphenate: false
       )
 
       // Reccomended to have 0.5in margin on all sides
