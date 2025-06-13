@@ -76,7 +76,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       // Personal Info Helper
       let contact-item(value, link-type: "") = {
         if value != "" {
-          if link-type != "" {
+          if link-type != "" and link-type != email {
             link("https://" + value)[#(link-type)]
           } else {
             value
