@@ -17,7 +17,7 @@ const { summary } = storeToRefs(summaryStore)
       autogrow
       hint="A brief summary about you."
       counter
-      maxlength="300"
+      maxlength="500"
     />
   </div>
 </template>

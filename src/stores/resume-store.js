@@ -4,6 +4,7 @@ import { usePersonalInfoStore } from 'stores/personal-info-store.js'
 import { useWorkInfoStore } from 'stores/work-info-store.js'
 import { useProjectInfoStore } from 'stores/projects-info-store.js'
 import { useSkillsInfoStore } from 'stores/skills-info-store.js'
+import { useSummaryStore } from 'stores/summary-store.js'
 
 // Ensure proper deep cloning for state isolation
 function secureDeepClone(obj) {
@@ -22,6 +23,7 @@ export const useSaveManagerStore = defineStore('saveManager', {
       const workStore = useWorkInfoStore()
       const projectStore = useProjectInfoStore()
       const skillsStore = useSkillsInfoStore()
+      const summaryStore = useSummaryStore()
 
       // Use secure deep clone to ensure complete isolation of state
       this.saves[saveName] = {
@@ -30,6 +32,7 @@ export const useSaveManagerStore = defineStore('saveManager', {
         workInfo: secureDeepClone(workStore.$state),
         projectInfo: secureDeepClone(projectStore.$state),
         skillsInfo: secureDeepClone(skillsStore.$state),
+        summaryInfo: secureDeepClone(summaryStore.$state),
       }
     },
 
@@ -41,6 +44,7 @@ export const useSaveManagerStore = defineStore('saveManager', {
       const workStore = useWorkInfoStore()
       const projectStore = useProjectInfoStore()
       const skillsStore = useSkillsInfoStore()
+      const summaryStore = useSummaryStore()
 
       // Use the $reset API and proper patching to avoid reference issues
       educationStore.$reset()
@@ -48,6 +52,7 @@ export const useSaveManagerStore = defineStore('saveManager', {
       workStore.$reset()
       projectStore.$reset()
       skillsStore.$reset()
+      summaryStore.$reset()
 
       // Create completely new copies of the saved states
       educationStore.$patch(secureDeepClone(this.saves[saveName].educationInfo))
@@ -55,6 +60,7 @@ export const useSaveManagerStore = defineStore('saveManager', {
       workStore.$patch(secureDeepClone(this.saves[saveName].workInfo))
       projectStore.$patch(secureDeepClone(this.saves[saveName].projectInfo))
       skillsStore.$patch(secureDeepClone(this.saves[saveName].skillsInfo))
+      summaryStore.$patch(secureDeepClone(this.saves[saveName].summaryInfo))
     },
 
     deleteSave(saveName) {
