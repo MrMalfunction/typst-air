@@ -13,6 +13,7 @@ import { Notify } from 'quasar'
 import { preloadRemoteFonts } from '@myriaddreamin/typst.ts'
 import { useStyleStore } from 'stores/style-store.js'
 import { useSummaryStore } from 'src/stores/summary-store'
+import { useSectionSeqStore } from 'stores/section-seq-store'
 
 const personalInfoStore = usePersonalInfoStore()
 const educationInfoStore = useEducationInfoStore()
@@ -22,6 +23,7 @@ const skillsInfoStore = useSkillsInfoStore()
 const styleStore = useStyleStore()
 const typstFormatStore = useTypstFormatStore()
 const summaryStore = useSummaryStore()
+const sectionSeqStore = useSectionSeqStore()
 
 const contentDiv = ref(null)
 
@@ -60,6 +62,11 @@ summaryStore.$subscribe(() => {
   previewSvg()
 })
 
+sectionSeqStore.$subscribe(() => {
+  console.log('Section sequence updated')
+  previewSvg()
+})
+
 const generateTypstContent = () => {
   console.log('Generating TYPST content')
   console.log()
@@ -74,6 +81,20 @@ const generateTypstContent = () => {
 
   const fontSize = styleStore.fontSizePt
   const colorCheck = styleStore.colorCheck ? '#26428b' : '#000000'
+  const sectionMap = {
+    edu: `== Education\n${educationSection}`,
+    work: `== Work Experience\n${workSection}`,
+    projects: `== Projects\n${projectsSection}`,
+    skills: `== Skills\n${skillsSection}`,
+  }
+
+  var orderedSections = ''
+  sectionSeqStore.sectionSeq.forEach((sectionName) => {
+    orderedSections += sectionMap[sectionName] + '\n\n'
+  })
+
+  console.log('Ordered sections:', orderedSections)
+
   return `
     #set text(size: ${fontSize}pt)
     ${typstFormatStore.getTypstFormat}
@@ -105,17 +126,7 @@ const generateTypstContent = () => {
 
     ${summaryStore.summary ? `== Summary\n${summaryStore.summary}` : ''}
 
-    == Education
-    ${educationSection}
-
-    == Work Experience
-    ${workSection}
-
-    == Projects
-    ${projectsSection}
-
-    == Skills
-    ${skillsSection}
+    ${orderedSections}
   `
 }
 const previewSvg = async () => {

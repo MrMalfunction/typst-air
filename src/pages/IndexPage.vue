@@ -11,14 +11,19 @@
             <StyleOptionsComp />
           </div>
 
+          <q-expansion-item
+            expand-separator
+            icon="reorder"
+            label="Reorder Sections"
+            class="q-mb-md"
+          >
+            <SectionReorderComp />
+          </q-expansion-item>
           <div class="text-h6">Personal Information</div>
           <div class="row q-col-gutter-md">
             <PersonalInfoComp />
             <SummaryInfoComp />
-            <EduInfoComp />
-            <WorkInfoComp />
-            <ProjectInfoComp />
-            <SkillsInfoComp />
+            <component v-for="section in sectionSeq" :key="section" :is="componentMap[section]" />
           </div>
         </div>
         <PreviewSVG />
@@ -45,6 +50,19 @@ import SkillsInfoComp from 'components/SkillsInfoComp.vue'
 import PreviewSVG from 'components/PreviewSVG.vue'
 import SaveComp from 'components/SaveComp.vue'
 import StyleOptionsComp from 'components/StyleOptionsComp.vue'
+import SectionReorderComp from 'components/SectionReorderComp.vue'
+import { useSectionSeqStore } from 'stores/section-seq-store'
+import { storeToRefs } from 'pinia'
+
+const sectionSeqStore = useSectionSeqStore()
+const { sectionSeq } = storeToRefs(sectionSeqStore)
+
+const componentMap = {
+  edu: EduInfoComp,
+  work: WorkInfoComp,
+  projects: ProjectInfoComp,
+  skills: SkillsInfoComp,
+}
 </script>
 
 <style scoped>
