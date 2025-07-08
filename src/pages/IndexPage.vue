@@ -14,6 +14,7 @@
           <div class="text-h6">Personal Information</div>
           <div class="row q-col-gutter-md">
             <PersonalInfoComp />
+            <SummaryInfoComp />
             <EduInfoComp />
             <WorkInfoComp />
             <ProjectInfoComp />
@@ -36,6 +37,7 @@
 <script setup>
 import HeaderComp from 'components/HeaderComp.vue'
 import PersonalInfoComp from 'components/PersonalInfoComp.vue'
+import SummaryInfoComp from 'components/SummaryInfoComp.vue'
 import EduInfoComp from 'components/EduInfoComp.vue'
 import WorkInfoComp from 'components/WorkInfoComp.vue'
 import ProjectInfoComp from 'components/ProjectinfoComp.vue'

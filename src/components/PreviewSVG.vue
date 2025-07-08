@@ -12,6 +12,7 @@ import { useTypstFormatStore } from 'stores/typst-format-store.js'
 import { Notify } from 'quasar'
 import { preloadRemoteFonts } from '@myriaddreamin/typst.ts'
 import { useStyleStore } from 'stores/style-store.js'
+import { useSummaryStore } from 'src/stores/summary-store'
 
 const personalInfoStore = usePersonalInfoStore()
 const educationInfoStore = useEducationInfoStore()
@@ -20,6 +21,7 @@ const projectInfoStore = useProjectInfoStore()
 const skillsInfoStore = useSkillsInfoStore()
 const styleStore = useStyleStore()
 const typstFormatStore = useTypstFormatStore()
+const summaryStore = useSummaryStore()
 
 const contentDiv = ref(null)
 
@@ -50,6 +52,11 @@ skillsInfoStore.$subscribe(() => {
 
 styleStore.$subscribe(() => {
   console.log('Style values updated')
+  previewSvg()
+})
+
+summaryStore.$subscribe(() => {
+  console.log('Summary values updated')
   previewSvg()
 })
 
@@ -95,6 +102,8 @@ const generateTypstContent = () => {
       author-position: center,
       personal-info-position: center,
     )
+
+    ${summaryStore.summary ? `== Summary\n${summaryStore.summary}` : ''}
 
     == Education
     ${educationSection}
