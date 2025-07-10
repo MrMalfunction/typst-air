@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineEmits, defineProps, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useJobsStore } from 'src/stores/jobs-store'
 import { api } from 'boot/axios.js'
 import { useQuasar } from 'quasar'
@@ -109,7 +109,7 @@ const handleButtonClick = async () => {
     console.log(jobData)
     console.log(props.stringsArray)
 
-    const response = await api.post('/', {
+    const response = await api.post('/improve-points', {
       jobDescription: jobData.description,
       resumePoints: props.stringsArray.join('\n'),
     })
@@ -126,7 +126,8 @@ const handleButtonClick = async () => {
       console.error('Response is missing parsedPoints:', response.data)
     }
   } catch (error) {
-    const errorMessage = error.message || 'An error occurred while processing your request, pls try again.'
+    const errorMessage =
+      error.message || 'An error occurred while processing your request, pls try again.'
     $q.notify({
       type: 'negative',
       message: `${errorMessage}`,

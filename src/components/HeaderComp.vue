@@ -3,6 +3,7 @@
     <q-toolbar>
       <q-toolbar-title>AI Resume</q-toolbar-title>
 
+      <q-btn flat label="Import Resume" @click="openImportDialog" />
       <q-btn flat label="FAQ" @click="faqDialog = true" />
       <q-btn
         flat
@@ -64,10 +65,19 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+  <ImportResumePopup ref="importResumePopup" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import ImportResumePopup from 'src/components/ImportResumePopup.vue'
 
 const faqDialog = ref(false)
+const importResumePopup = ref(null)
+
+const openImportDialog = () => {
+  if (importResumePopup.value) {
+    importResumePopup.value.openDialog()
+  }
+}
 </script>
