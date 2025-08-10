@@ -108,7 +108,7 @@ const openAiPopup = (company, points) => {
     <div class="text-h6">Work Experience</div>
     <draggable v-model="work" class="q-gutter-y-md" handle=".drag-handle" item-key="id">
       <template #item="{ element, index }">
-        <q-card class="q-pa-md">
+        <q-card class="q-pa-md" :data-work-index="index">
           <div class="row q-col-gutter-md">
             <div class="col-12">
               <q-input v-model="element.title" label="Position Title" outlined required />
@@ -181,7 +181,7 @@ const openAiPopup = (company, points) => {
             </div>
           </div>
           <div class="col-12 row items-center">
-            <q-btn class="drag-handle" flat icon="drag_indicator" round >
+            <q-btn class="drag-handle" flat icon="drag_indicator" round>
               <q-tooltip hove>Drag and rearrange order</q-tooltip>
             </q-btn>
             <q-btn

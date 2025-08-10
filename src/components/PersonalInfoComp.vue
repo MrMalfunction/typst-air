@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { usePersonalInfoStore } from 'stores/personal-info-store.js'
 import { storeToRefs } from 'pinia'
 

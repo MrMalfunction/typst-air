@@ -30,7 +30,7 @@ const removeSkill = (index) => {
     <div class="text-h6">Skills</div>
     <draggable v-model="skills" class="q-gutter-y-md" handle=".drag-handle" item-key="id">
       <template #item="{ element, index }">
-        <q-card class="q-pa-md">
+        <q-card class="q-pa-md" :data-skill-index="index">
           <div class="row q-col-gutter-md">
             <div class="col-12">
               <q-input v-model="element.heading" label="Category" outlined required />
@@ -48,7 +48,7 @@ const removeSkill = (index) => {
             </div>
           </div>
           <div class="col-12 row items-center">
-            <q-btn class="drag-handle" flat icon="drag_indicator" round >
+            <q-btn class="drag-handle" flat icon="drag_indicator" round>
               <q-tooltip hove>Drag and rearrange order</q-tooltip>
             </q-btn>
             <q-btn

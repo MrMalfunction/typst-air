@@ -1,32 +1,46 @@
 <script setup>
-import { $typst } from '@myriaddreamin/typst.ts'
+// Vue imports
+import { onMounted, ref } from 'vue'
+
+// Quasar imports
+import { Notify } from 'quasar'
+
+// Typst imports
+import { $typst, preloadRemoteFonts } from '@myriaddreamin/typst.ts'
 import renderUrl from '@myriaddreamin/typst-ts-renderer/pkg/typst_ts_renderer_bg.wasm?url'
 import compileUrl from '@myriaddreamin/typst-ts-web-compiler/pkg/typst_ts_web_compiler_bg.wasm?url'
-import { onMounted, ref } from 'vue'
+
+// Store imports
 import { useEducationInfoStore } from 'stores/education-info-store.js'
-import { useWorkInfoStore } from 'stores/work-info-store.js'
-import { useProjectInfoStore } from 'stores/projects-info-store.js'
-import { useSkillsInfoStore } from 'stores/skills-info-store.js'
 import { usePersonalInfoStore } from 'stores/personal-info-store.js'
-import { useTypstFormatStore } from 'stores/typst-format-store.js'
-import { Notify } from 'quasar'
-import { preloadRemoteFonts } from '@myriaddreamin/typst.ts'
+import { useProjectInfoStore } from 'stores/projects-info-store.js'
+import { useSectionSeqStore } from 'stores/section-seq-store'
+import { useSkillsInfoStore } from 'stores/skills-info-store.js'
 import { useStyleStore } from 'stores/style-store.js'
 import { useSummaryStore } from 'src/stores/summary-store'
-import { useSectionSeqStore } from 'stores/section-seq-store'
+import { useTypstFormatStore } from 'stores/typst-format-store.js'
+import { useWorkInfoStore } from 'stores/work-info-store.js'
 
-const personalInfoStore = usePersonalInfoStore()
+// Utility imports
+import { findSectionForElement } from 'src/util/text-matcher.js'
+
+const emit = defineEmits(['scroll-to-section'])
+
+// Store instances
 const educationInfoStore = useEducationInfoStore()
-const workInfoStore = useWorkInfoStore()
+const personalInfoStore = usePersonalInfoStore()
 const projectInfoStore = useProjectInfoStore()
+const sectionSeqStore = useSectionSeqStore()
 const skillsInfoStore = useSkillsInfoStore()
 const styleStore = useStyleStore()
-const typstFormatStore = useTypstFormatStore()
 const summaryStore = useSummaryStore()
-const sectionSeqStore = useSectionSeqStore()
+const typstFormatStore = useTypstFormatStore()
+const workInfoStore = useWorkInfoStore()
 
+// Component refs
 const contentDiv = ref(null)
 
+// Debouncing for preview updates
 let previewTimeout = null
 const debouncePreviewSvg = () => {
   if (previewTimeout) clearTimeout(previewTimeout)
@@ -35,60 +49,28 @@ const debouncePreviewSvg = () => {
   }, 50)
 }
 
-personalInfoStore.$subscribe(() => {
-  console.log('Personal values updated')
-  debouncePreviewSvg()
-})
-
-educationInfoStore.$subscribe(() => {
-  console.log('Education values updated')
-  debouncePreviewSvg()
-})
-
-workInfoStore.$subscribe(() => {
-  console.log('Work Experience values updated')
-  debouncePreviewSvg()
-})
-
-projectInfoStore.$subscribe(() => {
-  console.log('Projects values updated')
-  debouncePreviewSvg()
-})
-
-skillsInfoStore.$subscribe(() => {
-  console.log('Skills values updated')
-  debouncePreviewSvg()
-})
-
-styleStore.$subscribe(() => {
-  console.log('Style values updated')
-  debouncePreviewSvg()
-})
-
-summaryStore.$subscribe(() => {
-  console.log('Summary values updated')
-  debouncePreviewSvg()
-})
-
-sectionSeqStore.$subscribe(() => {
-  console.log('Section sequence updated')
-  debouncePreviewSvg()
-})
+// Store subscriptions for automatic preview updates
+personalInfoStore.$subscribe(() => debouncePreviewSvg())
+educationInfoStore.$subscribe(() => debouncePreviewSvg())
+workInfoStore.$subscribe(() => debouncePreviewSvg())
+projectInfoStore.$subscribe(() => debouncePreviewSvg())
+skillsInfoStore.$subscribe(() => debouncePreviewSvg())
+styleStore.$subscribe(() => debouncePreviewSvg())
+summaryStore.$subscribe(() => debouncePreviewSvg())
+sectionSeqStore.$subscribe(() => debouncePreviewSvg())
 
 const generateTypstContent = () => {
-  console.log('Generating TYPST content')
-  console.log()
-
+  // Generate sections content
   const educationSection = educationInfoStore.formatTYPST()
-
   const workSection = workInfoStore.formatTYPST()
-
   const projectsSection = projectInfoStore.formatTYPST()
-
   const skillsSection = skillsInfoStore.formatTYPST()
 
+  // Style configuration
   const fontSize = styleStore.fontSizePt
   const colorCheck = styleStore.colorCheck ? '#26428b' : '#000000'
+
+  // Section mapping
   const sectionMap = {
     edu: `== Education\n${educationSection}`,
     work: `== Work Experience\n${workSection}`,
@@ -96,12 +78,11 @@ const generateTypstContent = () => {
     skills: `== Skills\n${skillsSection}`,
   }
 
-  var orderedSections = ''
+  // Build ordered sections
+  let orderedSections = ''
   sectionSeqStore.sectionSeq.forEach((sectionName) => {
     orderedSections += sectionMap[sectionName] + '\n\n'
   })
-
-  console.log('Ordered sections:', orderedSections)
 
   return `
     #set text(size: ${fontSize}pt)
@@ -142,20 +123,13 @@ const previewSvg = async () => {
 
   try {
     const typstContent = generateTypstContent()
-    console.log('Generated Typst content:', typstContent)
-
     const svg = await $typst.svg({ mainContent: typstContent })
-    console.log(`rendered! SvgElement { len: ${svg.length} }`)
-
     contentDiv.value.innerHTML = svg
 
     const svgElem = contentDiv.value.firstElementChild
     if (svgElem) {
-      const width = Number.parseFloat(svgElem.getAttribute('width'))
-      const height = Number.parseFloat(svgElem.getAttribute('height'))
-      const cw = contentDiv.value.clientWidth - 40
-      svgElem.setAttribute('width', cw)
-      svgElem.setAttribute('height', (height * cw) / width)
+      setupSvgScaling(svgElem)
+      setupInteractivity(svgElem)
     }
   } catch (error) {
     console.error('Error previewing SVG:', error)
@@ -166,31 +140,101 @@ const previewSvg = async () => {
   }
 }
 
+const setupSvgScaling = (svgElem) => {
+  const width = Number.parseFloat(svgElem.getAttribute('width'))
+  const height = Number.parseFloat(svgElem.getAttribute('height'))
+  const cw = contentDiv.value.clientWidth - 40
+  svgElem.setAttribute('width', cw)
+  svgElem.setAttribute('height', (height * cw) / width)
+}
+
+const setupInteractivity = (svgElem) => {
+  // Hover effects
+  svgElem.addEventListener('mouseover', handleMouseOver)
+  svgElem.addEventListener('mouseout', handleMouseOut)
+  svgElem.addEventListener('click', handleClick)
+}
+
+const handleMouseOver = (event) => {
+  const hoveredElement = event.target
+  if (hoveredElement.classList?.contains('tsel')) {
+    hoveredElement.style.cursor = 'pointer'
+    hoveredElement.style.backgroundColor = 'rgba(38, 66, 139, 0.1)'
+    hoveredElement.style.outline = '1px solid rgba(38, 66, 139, 0.3)'
+  }
+}
+
+const handleMouseOut = (event) => {
+  const hoveredElement = event.target
+  if (hoveredElement.classList?.contains('tsel')) {
+    hoveredElement.style.cursor = 'default'
+    hoveredElement.style.backgroundColor = ''
+    hoveredElement.style.outline = ''
+  }
+}
+
+const handleClick = (event) => {
+  const clickedElement = event.target
+  if (!clickedElement.classList?.contains('tsel')) return
+
+  const result = findSectionForElement(clickedElement)
+  if (result) {
+    emit('scroll-to-section', result)
+    showNavigationFeedback(result)
+  } else {
+    console.log('No matching section found for clicked text')
+    Notify.create({
+      type: 'info',
+      message: 'No editable section found for this content',
+      timeout: 1500,
+      position: 'top',
+    })
+  }
+}
+
+const showNavigationFeedback = (result) => {
+  const sectionNames = {
+    personal: 'Personal Information',
+    summary: 'Summary',
+    edu: 'Education',
+    work: 'Work Experience',
+    projects: 'Projects',
+    skills: 'Skills',
+  }
+
+  let message = `Navigating to ${sectionNames[result.section] || result.section}`
+  if (result.entryIndex !== null) {
+    message += ` entry #${result.entryIndex + 1}`
+  }
+  message += ' section'
+
+  Notify.create({
+    type: 'positive',
+    message: message,
+    timeout: 1500,
+    position: 'top',
+  })
+}
+
 const exportPdf = async () => {
   try {
-    // Generate the Typst content
     const typstContent = generateTypstContent()
-    // Compile to PDF
     const pdfData = await $typst.pdf({ mainContent: typstContent })
-    // Create a blob from the PDF data
     const pdfBlob = new Blob([pdfData], { type: 'application/pdf' })
 
-    // Create a filename from user's name or use a default
+    // Generate filename
     let fileName = personalInfoStore.name.trim() || 'Resume'
-    // Clean the filename by replacing spaces with underscores and removing special characters
     fileName = fileName.replace(/[^\w\s-]/g, '').replace(/\s+/g, ' ') + ' Resume.pdf'
 
-    // Create a download link
+    // Create and trigger download
     const downloadLink = document.createElement('a')
     downloadLink.href = URL.createObjectURL(pdfBlob)
     downloadLink.download = fileName
 
-    // Append to the body, click and remove
     document.body.appendChild(downloadLink)
     downloadLink.click()
     document.body.removeChild(downloadLink)
 
-    // Clean up the object URL
     URL.revokeObjectURL(downloadLink.href)
   } catch (error) {
     console.error('PDF export failed:', error)
@@ -204,17 +248,20 @@ const exportPdf = async () => {
 const handleExport = () => exportPdf()
 
 onMounted(async () => {
+  // Initialize Typst renderer and compiler
+  const fontPreload = preloadRemoteFonts(['fonts/times.ttf', 'fonts/times-bold.ttf'])
+
   $typst.setRendererInitOptions({
     getModule: () => new URL(renderUrl, import.meta.url),
-    beforeBuild: [preloadRemoteFonts(['fonts/times.ttf', 'fonts/times-bold.ttf'])],
+    beforeBuild: [fontPreload],
   })
+
   $typst.setCompilerInitOptions({
     getModule: () => new URL(compileUrl, import.meta.url),
-    beforeBuild: [preloadRemoteFonts(['fonts/times.ttf', 'fonts/times-bold.ttf'])],
+    beforeBuild: [fontPreload],
   })
 
   await previewSvg()
-
   window.addEventListener('resize', () => previewSvg())
 })
 </script>
@@ -254,6 +301,18 @@ onMounted(async () => {
 .skills-input :deep() {
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+/* Styles for clickable SVG elements */
+.svg-container :deep(.tsel) {
+  transition: all 0.2s ease-in-out;
+}
+
+.svg-container :deep(.tsel:hover) {
+  cursor: pointer !important;
+  background-color: rgba(38, 66, 139, 0.1) !important;
+  outline: 1px solid rgba(38, 66, 139, 0.3) !important;
+  filter: brightness(1.05);
 }
 
 .preview-scroll-container {
