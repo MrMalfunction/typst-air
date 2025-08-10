@@ -28,7 +28,7 @@
             <PersonalInfoComp />
 
             <!-- Summary Section -->
-            <div ref="summarySection">
+            <div ref="summarySection" class="col-12">
               <SummaryInfoComp />
             </div>
 
