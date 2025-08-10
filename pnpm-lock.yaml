@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@myriaddreamin/typst-ts-renderer':
-        specifier: 0.5.5-rc7
-        version: 0.5.5-rc7
+        specifier: 0.6.1-rc2
+        version: 0.6.1-rc2
       '@myriaddreamin/typst-ts-web-compiler':
-        specifier: 0.5.5-rc7
-        version: 0.5.5-rc7
+        specifier: 0.6.1-rc2
+        version: 0.6.1-rc2
       '@myriaddreamin/typst.ts':
-        specifier: 0.5.5-rc7
-        version: 0.5.5-rc7(@myriaddreamin/typst-ts-renderer@0.5.5-rc7)(@myriaddreamin/typst-ts-web-compiler@0.5.5-rc7)
+        specifier: 0.6.1-rc2
+        version: 0.6.1-rc2(@myriaddreamin/typst-ts-renderer@0.6.1-rc2)(@myriaddreamin/typst-ts-web-compiler@0.6.1-rc2)
       '@quasar/extras':
         specifier: ^1.16.4
         version: 1.16.17
@@ -656,17 +656,17 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@myriaddreamin/typst-ts-renderer@0.5.5-rc7':
-    resolution: {integrity: sha512-DVMr2dVVhvMcKhRvveetdhPMwvr0Ck5hHGPAOmf0Z6l5QKLUduJde+0ydo+SHifPsd6N67ZJnH5bNxHsO7hIhQ==}
+  '@myriaddreamin/typst-ts-renderer@0.6.1-rc2':
+    resolution: {integrity: sha512-0RDCCIn2L9k5jfLY9PpKkdrN+akRUpp8bF1w36zSRS12XpIEp/ufz0raDWNi6A+3lzazIa6W3OOdK0EIPyIKzQ==}
 
-  '@myriaddreamin/typst-ts-web-compiler@0.5.5-rc7':
-    resolution: {integrity: sha512-dFS47UwVcOscGx6+9Ytn/QAKhHcuuG6K+zkAJO0Iw4j+4OHpu+VbZLUh3+6M6Bfl6TzzQ3fsBlgqgVF6UtfNug==}
+  '@myriaddreamin/typst-ts-web-compiler@0.6.1-rc2':
+    resolution: {integrity: sha512-c52rCB8CQHNvCPNRDKOFmj/TPRAi8icQ/1hfG3cCouml02EpNEKtA5OiZxmz7mPQScmbWQhJw6RZl7M4MOnhRA==}
 
-  '@myriaddreamin/typst.ts@0.5.5-rc7':
-    resolution: {integrity: sha512-ATGhPQSoIAThRZlqcdBkCROso7UQBV4vEmE8FQZYDcOQ12JpbkJUMop/3UV0kdRhJ1XzbJxckztFxWUmDbF9/g==}
+  '@myriaddreamin/typst.ts@0.6.1-rc2':
+    resolution: {integrity: sha512-z3YEp2Nii/N1kR4Gdop0dTBdoW/cKxosdk11rKHd9/g5rtTE77tNf6/ZL/4tU6h9adWqVt/HnspJ7mm1r8lFRA==}
     peerDependencies:
-      '@myriaddreamin/typst-ts-renderer': ^0.5.5-rc7
-      '@myriaddreamin/typst-ts-web-compiler': ^0.5.5-rc7
+      '@myriaddreamin/typst-ts-renderer': ^0.6.1-rc2
+      '@myriaddreamin/typst-ts-web-compiler': ^0.6.1-rc2
     peerDependenciesMeta:
       '@myriaddreamin/typst-ts-renderer':
         optional: true
@@ -3642,16 +3642,16 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@myriaddreamin/typst-ts-renderer@0.5.5-rc7': {}
+  '@myriaddreamin/typst-ts-renderer@0.6.1-rc2': {}
 
-  '@myriaddreamin/typst-ts-web-compiler@0.5.5-rc7': {}
+  '@myriaddreamin/typst-ts-web-compiler@0.6.1-rc2': {}
 
-  '@myriaddreamin/typst.ts@0.5.5-rc7(@myriaddreamin/typst-ts-renderer@0.5.5-rc7)(@myriaddreamin/typst-ts-web-compiler@0.5.5-rc7)':
+  '@myriaddreamin/typst.ts@0.6.1-rc2(@myriaddreamin/typst-ts-renderer@0.6.1-rc2)(@myriaddreamin/typst-ts-web-compiler@0.6.1-rc2)':
     dependencies:
       idb: 7.1.1
     optionalDependencies:
-      '@myriaddreamin/typst-ts-renderer': 0.5.5-rc7
-      '@myriaddreamin/typst-ts-web-compiler': 0.5.5-rc7
+      '@myriaddreamin/typst-ts-renderer': 0.6.1-rc2
+      '@myriaddreamin/typst-ts-web-compiler': 0.6.1-rc2
 
   '@napi-rs/canvas-android-arm64@0.1.73':
     optional: true

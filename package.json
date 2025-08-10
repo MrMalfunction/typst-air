@@ -15,9 +15,9 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
-    "@myriaddreamin/typst-ts-renderer": "0.5.5-rc7",
-    "@myriaddreamin/typst-ts-web-compiler": "0.5.5-rc7",
-    "@myriaddreamin/typst.ts": "0.5.5-rc7",
+    "@myriaddreamin/typst-ts-renderer": "0.6.1-rc2",
+    "@myriaddreamin/typst-ts-web-compiler": "0.6.1-rc2",
+    "@myriaddreamin/typst.ts": "0.6.1-rc2",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.8.4",
     "pdfjs-dist": "^5.3.93",

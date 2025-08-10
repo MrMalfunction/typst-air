@@ -1,5 +1,5 @@
 <script setup>
-import { $typst } from '@myriaddreamin/typst.ts/dist/esm/contrib/snippet.mjs'
+import { $typst } from '@myriaddreamin/typst.ts'
 import renderUrl from '@myriaddreamin/typst-ts-renderer/pkg/typst_ts_renderer_bg.wasm?url'
 import compileUrl from '@myriaddreamin/typst-ts-web-compiler/pkg/typst_ts_web_compiler_bg.wasm?url'
 import { onMounted, ref } from 'vue'
@@ -27,44 +27,52 @@ const sectionSeqStore = useSectionSeqStore()
 
 const contentDiv = ref(null)
 
+let previewTimeout = null
+const debouncePreviewSvg = () => {
+  if (previewTimeout) clearTimeout(previewTimeout)
+  previewTimeout = setTimeout(() => {
+    previewSvg()
+  }, 50)
+}
+
 personalInfoStore.$subscribe(() => {
   console.log('Personal values updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 educationInfoStore.$subscribe(() => {
   console.log('Education values updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 workInfoStore.$subscribe(() => {
   console.log('Work Experience values updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 projectInfoStore.$subscribe(() => {
   console.log('Projects values updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 skillsInfoStore.$subscribe(() => {
   console.log('Skills values updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 styleStore.$subscribe(() => {
   console.log('Style values updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 summaryStore.$subscribe(() => {
   console.log('Summary values updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 sectionSeqStore.$subscribe(() => {
   console.log('Section sequence updated')
-  previewSvg()
+  debouncePreviewSvg()
 })
 
 const generateTypstContent = () => {
