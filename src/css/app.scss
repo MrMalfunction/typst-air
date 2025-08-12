@@ -1,1 +1,155 @@
 // app global css in SCSS form
+
+// SVG hover color for both modes using filter and opacity for robustness
+.svg-container :deep(.tsel),
+.svg-container .tsel {
+  transition: filter 0.18s, opacity 0.18s;
+}
+
+.svg-container :deep(.tsel:hover),
+.svg-container .tsel:hover {
+  cursor: pointer !important;
+  filter: brightness(1.35) drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px #2196f3);
+  opacity: 0.92;
+}
+
+body.body--dark .svg-container :deep(.tsel:hover),
+body.body--dark .svg-container .tsel:hover {
+  filter: brightness(2.2) drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px #4fc3f7);
+  opacity: 1;
+}
+
+// Dark mode support for left (form) and right (SVG) parts
+
+body.body--dark {
+  background: #181a20 !important;
+  color: #e0e0e0 !important;
+}
+
+body.body--dark .form-container {
+  background: #23272f !important;
+  color: #e0e0e0 !important;
+}
+
+body.body--dark .preview-container {
+  background: #1a1d23 !important;
+  color: #e0e0e0 !important;
+}
+
+body.body--dark .svg-container {
+  background: #23272f !important;
+  border-color: #333 !important;
+  color: #fff !important;
+}
+
+body.body--dark .svg-container svg,
+body.body--dark .svg-container text,
+body.body--dark .svg-container tspan {
+  fill: #fff !important;
+  color: #fff !important;
+}
+
+/* moved above for grouping */
+
+body.body--dark .q-card,
+body.body--dark .q-dialog,
+body.body--dark .q-page,
+body.body--dark .q-footer {
+  background: #23272f !important;
+  color: #e0e0e0 !important;
+}
+
+body.body--dark .q-header,
+body.body--dark .q-toolbar {
+  background: #181a20 !important;
+  color: #fff !important;
+}
+
+body.body--dark .q-input,
+body.body--dark .q-editor,
+body.body--dark .q-select,
+body.body--dark .q-btn {
+  background: #23272f !important;
+  color: #e0e0e0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.12);
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+/* Primary buttons */
+body.body--dark .q-btn.bg-primary,
+body.body--dark .q-btn--standard.bg-primary {
+  background: #1976d2 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px 0 rgba(25, 118, 210, 0.15);
+}
+body.body--dark .q-btn.bg-primary:hover,
+body.body--dark .q-btn--standard.bg-primary:hover {
+  background: #1565c0 !important;
+}
+
+/* Outline buttons */
+body.body--dark .q-btn--outline {
+  background: transparent !important;
+  color: #90caf9 !important;
+  border: 1.5px solid #90caf9 !important;
+}
+body.body--dark .q-btn--outline:hover {
+  background: rgba(144, 202, 249, 0.08) !important;
+}
+
+/* Flat buttons */
+body.body--dark .q-btn--flat {
+  background: transparent !important;
+  color: #90caf9 !important;
+}
+body.body--dark .q-btn--flat:hover {
+  background: rgba(144, 202, 249, 0.08) !important;
+}
+
+/* Disabled state */
+body.body--dark .q-btn:disabled,
+body.body--dark .q-btn[disabled] {
+  background: #23272f !important;
+  color: #888 !important;
+  border-color: #333 !important;
+  opacity: 0.6;
+}
+
+body.body--dark .q-chip {
+  background: #2d313a !important;
+  color: #e0e0e0 !important;
+}
+
+body.body--dark .q-expansion-item {
+  background: #23272f !important;
+  color: #e0e0e0 !important;
+}
+
+body.body--dark .export-button-container {
+  background: #23272f !important;
+}
+body.body--dark .export-button-container .q-btn {
+  background: #1976d2 !important; /* Use primary blue for better visibility */
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 2px 8px 0 rgba(25, 118, 210, 0.15);
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+body.body--dark .export-button-container .q-btn:hover,
+body.body--dark .export-button-container .q-btn:focus {
+  background: #1565c0 !important;
+}
+
+.body--dark .export-button-container .q-btn {
+  background: #26428b !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+body.body--dark .q-toolbar-title,
+body.body--dark .text-h6,
+body.body--dark .text-subtitle2,
+body.body--dark .text-caption {
+  color: #e0e0e0 !important;
+}

@@ -3,8 +3,6 @@
     <q-toolbar>
       <q-toolbar-title>AI Resume</q-toolbar-title>
 
-      <q-btn flat label="Import Resume" @click="openImportDialog" />
-      <q-btn flat label="FAQ" @click="faqDialog = true" />
       <q-btn
         flat
         href="https://amolbohora.userjot.com/board/all"
@@ -12,6 +10,10 @@
         target="_blank"
         type="a"
       />
+      <q-btn flat label="FAQ" @click="faqDialog = true" />
+      <q-btn flat label="Import Resume" @click="openImportDialog" />
+      <q-space />
+      <DarkModeToggle />
     </q-toolbar>
   </div>
 
@@ -71,6 +73,7 @@
 <script setup>
 import { ref } from 'vue'
 import ImportResumePopup from 'src/components/ImportResumePopup.vue'
+import DarkModeToggle from './_DarkModeToggle.vue'
 
 const faqDialog = ref(false)
 const importResumePopup = ref(null)

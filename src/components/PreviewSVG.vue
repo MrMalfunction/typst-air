@@ -10,6 +10,10 @@ import { $typst, preloadRemoteFonts } from '@myriaddreamin/typst.ts'
 import renderUrl from '@myriaddreamin/typst-ts-renderer/pkg/typst_ts_renderer_bg.wasm?url'
 import compileUrl from '@myriaddreamin/typst-ts-web-compiler/pkg/typst_ts_web_compiler_bg.wasm?url'
 
+// Pinia dark mode store import for seamless toggling
+import { useDarkModeStore } from 'src/stores/dark-mode-store.js'
+import { storeToRefs } from 'pinia'
+
 // Store imports
 import { useEducationInfoStore } from 'stores/education-info-store.js'
 import { usePersonalInfoStore } from 'stores/personal-info-store.js'
@@ -36,6 +40,14 @@ const styleStore = useStyleStore()
 const summaryStore = useSummaryStore()
 const typstFormatStore = useTypstFormatStore()
 const workInfoStore = useWorkInfoStore()
+const darkModeStore = useDarkModeStore()
+const { isDark } = storeToRefs(darkModeStore)
+
+// Rerender SVG when dark mode changes
+import { watch } from 'vue'
+watch(isDark, () => {
+  debouncePreviewSvg()
+})
 
 // Component refs
 const contentDiv = ref(null)
@@ -68,7 +80,19 @@ const generateTypstContent = () => {
 
   // Style configuration
   const fontSize = styleStore.fontSizePt
-  const colorCheck = styleStore.colorCheck ? '#26428b' : '#000000'
+
+  // Use Pinia store for dark mode
+  const dark = isDark.value
+
+  // colorCheck logic: blue in light mode, white in dark mode if enabled, else black/white
+  let headingColor
+  if (styleStore.colorCheck) {
+    headingColor = dark ? '#fff' : '#26428b'
+  } else {
+    headingColor = dark ? '#fff' : '#000'
+  }
+  // Set text color for SVG based on dark mode
+  const svgTextColor = dark ? '#fff' : '#000'
 
   // Section mapping
   const sectionMap = {
@@ -85,7 +109,7 @@ const generateTypstContent = () => {
   })
 
   return `
-    #set text(size: ${fontSize}pt)
+    #set text(size: ${fontSize}pt, fill: rgb("${svgTextColor}"))
     ${typstFormatStore.getTypstFormat}
     #let name = "${personalInfoStore.name}"
     #let location = "${personalInfoStore.location}"
@@ -107,7 +131,7 @@ const generateTypstContent = () => {
       phone: phone,
       personal-site: personal-site,
       accent-color: "#26428b",
-      heading-color: "${colorCheck}",
+      heading-color: "${headingColor}",
       paper: "us-letter",
       author-position: center,
       personal-info-position: center,
@@ -155,21 +179,29 @@ const setupInteractivity = (svgElem) => {
   svgElem.addEventListener('click', handleClick)
 }
 
+/**
+ * Handles mouse over for SVG .tsel elements (adds glow/fill).
+ */
 const handleMouseOver = (event) => {
   const hoveredElement = event.target
   if (hoveredElement.classList?.contains('tsel')) {
     hoveredElement.style.cursor = 'pointer'
-    hoveredElement.style.backgroundColor = 'rgba(38, 66, 139, 0.1)'
-    hoveredElement.style.outline = '1px solid rgba(38, 66, 139, 0.3)'
+    hoveredElement.setAttribute('filter', 'url(#svg-hover-glow)')
+    // Use Pinia store for dark mode for hover
+    hoveredElement.setAttribute('fill', isDark.value ? '#4fc3f7' : '#26428b')
   }
 }
 
+/**
+ * Handles mouse out for SVG .tsel elements (removes glow/fill).
+ */
 const handleMouseOut = (event) => {
   const hoveredElement = event.target
   if (hoveredElement.classList?.contains('tsel')) {
     hoveredElement.style.cursor = 'default'
-    hoveredElement.style.backgroundColor = ''
-    hoveredElement.style.outline = ''
+    hoveredElement.removeAttribute('filter')
+    // Use Pinia store for dark mode for hover out
+    hoveredElement.setAttribute('fill', isDark.value ? '#fff' : '#000')
   }
 }
 
@@ -218,7 +250,67 @@ const showNavigationFeedback = (result) => {
 
 const exportPdf = async () => {
   try {
-    const typstContent = generateTypstContent()
+    // Always use light mode colors for PDF export
+    const fontSize = styleStore.fontSizePt
+    let headingColor
+    if (styleStore.colorCheck) {
+      headingColor = '#26428b'
+    } else {
+      headingColor = '#000'
+    }
+    const svgTextColor = '#000'
+
+    const educationSection = educationInfoStore.formatTYPST()
+    const workSection = workInfoStore.formatTYPST()
+    const projectsSection = projectInfoStore.formatTYPST()
+    const skillsSection = skillsInfoStore.formatTYPST()
+
+    const sectionMap = {
+      edu: `== Education\n${educationSection}`,
+      work: `== Work Experience\n${workSection}`,
+      projects: `== Projects\n${projectsSection}`,
+      skills: `== Skills\n${skillsSection}`,
+    }
+
+    let orderedSections = ''
+    sectionSeqStore.sectionSeq.forEach((sectionName) => {
+      orderedSections += sectionMap[sectionName] + '\n\n'
+    })
+
+    const typstContent = `
+      #set text(size: ${fontSize}pt, fill: rgb("${svgTextColor}"))
+      ${typstFormatStore.getTypstFormat}
+      #let name = "${personalInfoStore.name}"
+      #let location = "${personalInfoStore.location}"
+      #let email = "${personalInfoStore.email}"
+      #let phone = "${personalInfoStore.phone}"
+      #let github = "${personalInfoStore.github}"
+      #let linkedin = "${personalInfoStore.linkedin}"
+      #let personal-site = "${personalInfoStore.personalSite}"
+      #set text(
+        font: "Times New Roman"
+      )
+
+      #show: resume.with(
+        author: name,
+        location: location,
+        email: email,
+        github: github,
+        linkedin: linkedin,
+        phone: phone,
+        personal-site: personal-site,
+        accent-color: "#26428b",
+        heading-color: "${headingColor}",
+        paper: "us-letter",
+        author-position: center,
+        personal-info-position: center,
+      )
+
+      ${summaryStore.summary ? `== Summary\n${summaryStore.summary}` : ''}
+
+      ${orderedSections}
+    `
+
     const pdfData = await $typst.pdf({ mainContent: typstContent })
     const pdfBlob = new Blob([pdfData], { type: 'application/pdf' })
 
@@ -269,17 +361,35 @@ onMounted(async () => {
 <template>
   <!-- Right side preview -->
   <div class="col preview-container q-pa-md">
+    <p class="text-subtitle2 text-grey text-center">
+      All of the text below is selectable and copyable.
+    </p>
     <div class="preview-scroll-container">
-      <p class="text-subtitle2 text-grey text-center">
-        All of the text below is selectable and copyable.
-      </p>
       <div ref="contentDiv" class="svg-container">
+        <!-- SVG filter for hover glow effect -->
+        <svg width="0" height="0" style="position: absolute">
+          <filter id="svg-hover-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#4fc3f7" flood-opacity="1" />
+            <feDropShadow
+              dx="0"
+              dy="0"
+              stdDeviation="6"
+              flood-color="#4fc3f7"
+              flood-opacity="0.7"
+            />
+          </filter>
+        </svg>
         <!-- SVG content will be rendered here -->
         Renderer is loading. Please Wait.
       </div>
     </div>
     <div class="export-button-container">
-      <q-btn class="full-width" color="primary" label="Export to PDF" @click="handleExport" />
+      <q-btn
+        class="full-width"
+        color="primary"
+        :label="isDark ? 'Export PDF (White Mode)' : 'Export to PDF'"
+        @click="handleExport"
+      />
     </div>
   </div>
 </template>
@@ -298,21 +408,16 @@ onMounted(async () => {
   border: #1d1d1d solid 1px;
 }
 
+/* SVG hover effect for .tsel (text selection) */
+.svg-container :deep(.tsel) {
+  transition:
+    fill 0.18s,
+    filter 0.18s;
+}
+
 .skills-input :deep() {
   white-space: pre-wrap;
   word-wrap: break-word;
-}
-
-/* Styles for clickable SVG elements */
-.svg-container :deep(.tsel) {
-  transition: all 0.2s ease-in-out;
-}
-
-.svg-container :deep(.tsel:hover) {
-  cursor: pointer !important;
-  background-color: rgba(38, 66, 139, 0.1) !important;
-  outline: 1px solid rgba(38, 66, 139, 0.3) !important;
-  filter: brightness(1.05);
 }
 
 .preview-scroll-container {

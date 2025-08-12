@@ -146,87 +146,107 @@ const closeDialog = () => {
 
 <template>
   <q-dialog v-model="isVisible">
-    <q-card>
-      <q-toolbar>
-        <q-toolbar-title class="text-subtitle1"
-          >Fine Tuning Current Points of : {{ selectedJob.job.company }}
-        </q-toolbar-title>
-      </q-toolbar>
-      <q-card-section>
-        <!-- Center aligned q-select -->
-        <div class="q-pa-md flex flex-center">
-          <q-select
-            v-model="selectedJob"
-            :options="formattedOptions"
-            behavior="menu"
-            input-debounce="0"
-            label="Select Job"
-            option-label="label"
-            outlined
-            style="width: 350px"
-          >
-            <template v-slot:after>
-              <q-btn color="primary" dense flat icon="add" round @click="toggleNewJobForm">
-                <q-tooltip> Add a new job </q-tooltip>
-              </q-btn>
-            </template>
-          </q-select>
-        </div>
+    <div class="custom-dark-dialog">
+      <q-card>
+        <q-toolbar>
+          <q-toolbar-title class="text-subtitle1"
+            >Fine Tuning Current Points of : {{ selectedJob.job.company }}
+          </q-toolbar-title>
+        </q-toolbar>
+        <q-card-section>
+          <!-- Center aligned q-select -->
+          <div class="q-pa-md flex flex-center">
+            <q-select
+              v-model="selectedJob"
+              :options="formattedOptions"
+              behavior="menu"
+              input-debounce="0"
+              label="Select Job"
+              option-label="label"
+              outlined
+              style="width: 350px"
+            >
+              <template v-slot:after>
+                <q-btn color="primary" dense flat icon="add" round @click="toggleNewJobForm">
+                  <q-tooltip> Add a new job </q-tooltip>
+                </q-btn>
+              </template>
+            </q-select>
+          </div>
 
-        <!-- Simplified job form -->
-        <div v-if="showNewJobForm" class="q-pa-md">
-          <div class="text-h6 q-mb-md">Add a new Job</div>
-          <div class="row q-col-gutter-sm">
-            <div class="col-12">
-              <q-input v-model="newJob.title" dense label="Job Title" outlined required />
-            </div>
-            <div class="col-12">
-              <q-input v-model="newJob.company" dense label="Company" outlined required />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="newJob.description"
-                dense
-                label="Description"
-                outlined
-                type="textarea"
-              />
-            </div>
-            <div class="col-12 flex justify-end q-gutter-sm">
-              <q-btn
-                :disable="isAddingJob"
-                color="red"
-                label="Cancel"
-                outline
-                @click="showNewJobForm = false"
-              />
-              <q-btn
-                :disable="
-                  !newJob.title.trim() ||
-                  !newJob.company.trim() ||
-                  !newJob.description.trim() ||
-                  isAddingJob
-                "
-                :loading="isAddingJob"
-                color="primary"
-                label="Add Job"
-                @click="addNewJob"
-              />
+          <!-- Simplified job form -->
+          <div v-if="showNewJobForm" class="q-pa-md">
+            <div class="text-h6 q-mb-md">Add a new Job</div>
+            <div class="row q-col-gutter-sm">
+              <div class="col-12">
+                <q-input v-model="newJob.title" dense label="Job Title" outlined required />
+              </div>
+              <div class="col-12">
+                <q-input v-model="newJob.company" dense label="Company" outlined required />
+              </div>
+              <div class="col-12">
+                <q-input
+                  v-model="newJob.description"
+                  dense
+                  label="Description"
+                  outlined
+                  type="textarea"
+                />
+              </div>
+              <div class="col-12 flex justify-end q-gutter-sm">
+                <q-btn
+                  :disable="isAddingJob"
+                  color="red"
+                  label="Cancel"
+                  outline
+                  @click="showNewJobForm = false"
+                />
+                <q-btn
+                  :disable="
+                    !newJob.title.trim() ||
+                    !newJob.company.trim() ||
+                    !newJob.description.trim() ||
+                    isAddingJob
+                  "
+                  :loading="isAddingJob"
+                  color="primary"
+                  label="Add Job"
+                  @click="addNewJob"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </q-card-section>
+        </q-card-section>
 
-      <q-card-actions align="right">
-        <q-btn color="red" label="Close" outline @click="closeDialog" />
-        <q-btn
-          :disable="isAddingJob || showNewJobForm || isSubmitting"
-          :loading="isSubmitting"
-          color="primary"
-          label="Submit"
-          @click="handleButtonClick"
-        />
-      </q-card-actions>
-    </q-card>
+        <q-card-actions align="right">
+          <q-btn color="red" label="Close" outline @click="closeDialog" />
+          <q-btn
+            :disable="isAddingJob || showNewJobForm || isSubmitting"
+            :loading="isSubmitting"
+            color="primary"
+            label="Submit"
+            @click="handleButtonClick"
+          />
+        </q-card-actions>
+      </q-card>
+    </div>
   </q-dialog>
 </template>
+
+<style scoped>
+/* Fix dark mode overlay for q-dialog */
+:deep(.q-dialog__backdrop) {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(1.5px);
+}
+
+/* Ensure dialog content is visible in dark mode */
+.custom-dark-dialog .q-card {
+  background: var(--q-dark) !important;
+  color: #fff !important;
+}
+body.body--dark .custom-dark-dialog .q-card {
+  background: #23272f !important;
+  color: #fff !important;
+}
+</style>
