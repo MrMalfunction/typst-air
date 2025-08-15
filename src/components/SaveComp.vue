@@ -8,6 +8,7 @@ const saveDialog = ref(false)
 const saveResumeName = ref('')
 const allResumeNames = computed(() => resumeStore.getSaves)
 const selectedResumeName = ref('')
+const confirmHeaderOverwrite = ref(false)
 const confirmOverwrite = ref(false)
 const overwriteName = ref('')
 
@@ -67,6 +68,20 @@ const handleDelete = () => {
     console.error(`Error deleting resume: ${error}`)
   }
 }
+const handleHeaderOverwrite = () => {
+  confirmHeaderOverwrite.value = true
+}
+
+const overwriteCurrentResume = () => {
+  try {
+    resumeStore.saveState(selectedResumeName.value)
+    confirmHeaderOverwrite.value = false
+    // Optionally show a notification here
+    console.log(`Resume overwritten under key: ${selectedResumeName.value}`)
+  } catch (error) {
+    console.error(`Error overwriting resume: ${error}`)
+  }
+}
 </script>
 
 <template>
@@ -91,6 +106,15 @@ const handleDelete = () => {
           color="negative"
           label="Delete Resume"
           @click="handleDelete"
+        />
+        <q-btn
+          v-if="selectedResumeName"
+          color="secondary"
+          outline
+          label="Overwrite Resume"
+          class="text-bold"
+          @click="handleHeaderOverwrite"
+          style="margin-left: 8px"
         />
       </div>
     </div>
@@ -134,7 +158,31 @@ const handleDelete = () => {
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat label="Cancel" v-close-popup />
-        <q-btn color="primary" flat label="Overwrite" @click="saveResume" v-close-popup />
+        <q-btn color="secondary" outline label="Overwrite" @click="saveResume" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <!-- Overwrite confirmation dialog for header -->
+  <q-dialog v-model="confirmHeaderOverwrite">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">Overwrite Resume</div>
+        <p>
+          Are you sure you want to overwrite the current resume "<span style="font-weight: bold">{{
+            selectedResumeName
+          }}</span
+          >" with your latest changes?
+        </p>
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn flat label="Cancel" v-close-popup />
+        <q-btn
+          color="secondary"
+          outline
+          label="Overwrite"
+          @click="overwriteCurrentResume"
+          v-close-popup
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
