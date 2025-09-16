@@ -73,7 +73,7 @@ async function handleImprovePoints(request, env) {
 				'content-type': 'application/json',
 			},
 			body: JSON.stringify({
-				model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+				model: 'meta-llama/llama-4-scout-17b-16e-instruct', // new model
 				messages: ai_message_body,
 				temperature: 0.5,
 				max_completion_tokens: 1000,
