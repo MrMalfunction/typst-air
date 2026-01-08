@@ -4,6 +4,7 @@ export const useStyleStore = defineStore('styleStore', {
   state: () => ({
     fontSizePt: 10,
     colorCheck: true,
+    marginInches: 0.5,
   }),
   persist: true,
 })

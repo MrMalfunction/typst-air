@@ -80,6 +80,7 @@ const generateTypstContent = () => {
 
   // Style configuration
   const fontSize = styleStore.fontSizePt
+  const marginInches = styleStore.marginInches
 
   // Use Pinia store for dark mode
   const dark = isDark.value
@@ -135,6 +136,7 @@ const generateTypstContent = () => {
       paper: "us-letter",
       author-position: center,
       personal-info-position: center,
+      margin: ${marginInches}in,
     )
 
     ${summaryStore.summary ? `== Summary\n${summaryStore.summary}` : ''}
@@ -252,6 +254,7 @@ const exportPdf = async () => {
   try {
     // Always use light mode colors for PDF export
     const fontSize = styleStore.fontSizePt
+    const marginInches = styleStore.marginInches
     let headingColor
     if (styleStore.colorCheck) {
       headingColor = '#26428b'
@@ -288,7 +291,7 @@ const exportPdf = async () => {
       #let linkedin = "${personalInfoStore.linkedin}"
       #let personal-site = "${personalInfoStore.personalSite}"
       #set text(
-        font: "Times New Roman"
+        font: "Times New Roman" // Useless as loaded font is used.
       )
 
       #show: resume.with(
@@ -304,6 +307,7 @@ const exportPdf = async () => {
         paper: "us-letter",
         author-position: center,
         personal-info-position: center,
+        margin: ${marginInches}in,
       )
 
       ${summaryStore.summary ? `== Summary\n${summaryStore.summary}` : ''}

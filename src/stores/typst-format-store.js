@@ -19,6 +19,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
       heading-color: "#26428b",
       font: "Libertinus Serif",
       paper: "us-letter",
+      margin: 0.5in,
       body,
     ) = {
 
@@ -37,7 +38,7 @@ export const useTypstFormatStore = defineStore('typstFormat', {
 
       // Reccomended to have 0.5in margin on all sides
       set page(
-        margin: (0.5in),
+        margin: (margin),
         paper: paper,
       )
 

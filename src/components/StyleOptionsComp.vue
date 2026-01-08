@@ -6,6 +6,11 @@
     </label>
     <br />
     <label>
+      Page Margin (inches):
+      <input type="number" v-model="marginInches" step="0.1" min="0.1" max="0.9" />
+    </label>
+    <br />
+    <label>
       Enable Color Check:
       <input type="checkbox" v-model="colorCheck" />
     </label>
@@ -20,11 +25,12 @@ export default {
   name: 'StyleOptionsComp',
   setup() {
     const styleStore = useStyleStore()
-    const { fontSizePt, colorCheck } = storeToRefs(styleStore)
+    const { fontSizePt, colorCheck, marginInches } = storeToRefs(styleStore)
 
     return {
       fontSizePt,
       colorCheck,
+      marginInches,
     }
   },
 }
