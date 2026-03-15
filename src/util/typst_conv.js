@@ -26,6 +26,7 @@ export function escapeTypstSpecialChars(text) {
   // Regular expression to match Typst special characters
   text = text.replace(/\$/g, '\\$') // Escape dollar sign
   text = text.replace(/@/g, '\\@') // Escape (at) sign
+  text = text.replace(/#/g, '\\#') // Escape hash sign
 
   return text
 }

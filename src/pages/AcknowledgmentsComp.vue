@@ -25,7 +25,7 @@
             <a
               href="https://github.com/stuxf/basic-typst-resume-template?tab=Unlicense-1-ov-file"
               title="resume format"
-            >Resume Format [Derived From]</a
+              >Resume Format [Derived From]</a
             >
           </div>
 

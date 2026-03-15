@@ -1,4 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
 
 export const usePersonalInfoStore = defineStore('personalInfo', {
   state: () => ({
@@ -10,6 +11,20 @@ export const usePersonalInfoStore = defineStore('personalInfo', {
     linkedin: 'linkedin.com/in/amol-bohora',
     personalSite: '',
   }),
+  actions: {
+    formatTYPST() {
+      return `
+#resume-header(
+  name: "${escapeTypstSpecialChars(this.name)}",
+  location: "${escapeTypstSpecialChars(this.location)}",
+  email: "${escapeTypstSpecialChars(this.email)}",
+  phone: "${escapeTypstSpecialChars(this.phone)}",
+  github: "${escapeTypstSpecialChars(this.github)}",
+  linkedin: "${escapeTypstSpecialChars(this.linkedin)}",
+  personal-site: "${escapeTypstSpecialChars(this.personalSite)}",
+)`
+    },
+  },
 })
 
 if (import.meta.hot) {

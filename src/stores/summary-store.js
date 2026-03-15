@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
 
 export const useSummaryStore = defineStore('summary', () => {
   const summary = ref('')
@@ -8,5 +9,9 @@ export const useSummaryStore = defineStore('summary', () => {
     summary.value = ''
   }
 
-  return { summary, $reset }
+  function formatTYPST() {
+    return escapeTypstSpecialChars(summary.value)
+  }
+
+  return { summary, $reset, formatTYPST }
 })

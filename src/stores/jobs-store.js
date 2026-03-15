@@ -7,10 +7,11 @@ export const useJobsStore = defineStore('jobsStore', {
         id: 1,
         title: 'Software Engineer',
         company: 'Tech Company',
-        description: 'About the job\n' +
+        description:
+          'About the job\n' +
           'Obsidian Security was founded in 2017 to solve the unaddressed blindspot of SaaS Security. SaaS applications provide the tools employees need to succeed and hold the business’ most critical information. If those tools become unavailable or that data is jeopardized, there is a detrimental impact on the organization.\n' +
           '\n' +
-          'Obsidian proudly offers the industry\'s most comprehensive and powerful SaaS defense solution. We are committed to solving the challenge of SaaS Security for our customers as efficiently and effectively as possible.\n' +
+          "Obsidian proudly offers the industry's most comprehensive and powerful SaaS defense solution. We are committed to solving the challenge of SaaS Security for our customers as efficiently and effectively as possible.\n" +
           '\n' +
           'We’re a passionate team optimizing for impact by solving some of the biggest challenges in cybersecurity today. We listen closely to our customers, iterate quickly, and (over) deliver to delight them. Working at Obsidian means contributing to an industry-leading cybersecurity product in an environment where customer satisfaction, privacy, and data ethics are paramount.\n' +
           '\n' +
@@ -20,7 +21,7 @@ export const useJobsStore = defineStore('jobsStore', {
           '\n' +
           'Full-Stack Development: Design, build, and maintain both front-end and back-end components for our SaaS security platform.\n' +
           'Security Focus: Work on security-related features, integrating cutting-edge security protocols, and building tools that help secure our customers’ data and infrastructure.\n' +
-          'Collaboration: Work closely with other engineers, product managers, and designers to deliver high-quality features and enhance the platform\'s security.\n' +
+          "Collaboration: Work closely with other engineers, product managers, and designers to deliver high-quality features and enhance the platform's security.\n" +
           'System Design: Participate in high-level system design and architecture discussions for new features and products.\n' +
           'Problem Solving: Identify technical issues and implement solutions to improve performance, scalability, and security of the platform.\n' +
           'Continuous Improvement: Drive continuous improvement in code quality, testing, and deployment processes.\n' +

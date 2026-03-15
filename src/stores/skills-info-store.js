@@ -1,4 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
 
 export const useSkillsInfoStore = defineStore('skillsInfo', {
   state: () => ({
@@ -11,8 +12,7 @@ export const useSkillsInfoStore = defineStore('skillsInfo', {
       {
         id: 2,
         heading: 'Web/Mobile Development',
-        content:
-          'React JS, Vue JS, AngularJS, RxJS, FastAPI, iOS, Django, JSON',
+        content: 'React JS, Vue JS, AngularJS, RxJS, FastAPI, iOS, Django, JSON',
       },
       {
         id: 3,
@@ -30,7 +30,14 @@ export const useSkillsInfoStore = defineStore('skillsInfo', {
   }),
   actions: {
     formatTYPST() {
-      return this.skills.map((skill) => `- *${skill.heading}*: ${skill.content}`).join('\n')
+      return this.skills
+        .map(
+          (skill) =>
+            `- *${escapeTypstSpecialChars(skill.heading)}*: ${escapeTypstSpecialChars(
+              skill.content,
+            )}`,
+        )
+        .join('\n')
     },
   },
 })

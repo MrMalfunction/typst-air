@@ -1,5 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatBulletPoint, formatTypstDate } from 'src/util/format_bullet_points.js'
+import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
 
 export const useWorkInfoStore = defineStore('workInfo', {
   state: () => ({
@@ -14,7 +15,7 @@ export const useWorkInfoStore = defineStore('workInfo', {
         points: [
           'Led SupplyTrace’s backend migration from Django to FastAPI, improving API response times by 19% and cutting server usage by 15%. Optimized PostgreSQL performance by 7% while enhancing documentation and adopting Scrum for better team collaboration.',
           'Designed and implemented ETL pipelines with Prefect/Airflow on university HPC systems using Slurm, increasing data processing reliability by 25%.',
-          'Configured cloud infrastructure and CI/CD pipelines, improving operational efficiency by 15%.'
+          'Configured cloud infrastructure and CI/CD pipelines, improving operational efficiency by 15%.',
         ],
       },
     ],
@@ -30,9 +31,9 @@ export const useWorkInfoStore = defineStore('workInfo', {
 
           return `
       #work(
-        title: "${work.title}",
-        company: "${work.company}",
-        location: "${work.location}",
+        title: "${escapeTypstSpecialChars(work.title)}",
+        company: "${escapeTypstSpecialChars(work.company)}",
+        location: "${escapeTypstSpecialChars(work.location)}",
         dates: dates-helper(start-date: "${formatTypstDate(work.startDate)}", end-date: "${formatTypstDate(work.endDate)}"),
       )
       ${bulletPoints}`

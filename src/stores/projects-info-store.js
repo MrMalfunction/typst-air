@@ -1,5 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatBulletPoint, formatTypstDate } from 'src/util/format_bullet_points.js'
+import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
 
 export const useProjectInfoStore = defineStore('projectInfo', {
   state: () => ({
@@ -11,9 +12,7 @@ export const useProjectInfoStore = defineStore('projectInfo', {
         startDate: 'Jan 2025',
         endDate: 'Present',
         url: 'air.amolbohora.com',
-        points: [
-          'Created this website you are interacting with.',
-        ],
+        points: ['Created this website you are interacting with.'],
       },
     ],
   }),
@@ -28,8 +27,8 @@ export const useProjectInfoStore = defineStore('projectInfo', {
 
           return `
       #project(
-        name: "${project.name}",
-        role: "${project.role}"${
+        name: "${escapeTypstSpecialChars(project.name)}",
+        role: "${escapeTypstSpecialChars(project.role)}"${
           project.startDate
             ? `,
         dates: dates-helper(start-date: "${formatTypstDate(project.startDate)}", end-date: "${formatTypstDate(project.endDate)}")`
@@ -37,7 +36,7 @@ export const useProjectInfoStore = defineStore('projectInfo', {
         }${
           project.url
             ? `,
-        url: "${project.url}"`
+        url: "${escapeTypstSpecialChars(project.url)}"`
             : ''
         }
       )
