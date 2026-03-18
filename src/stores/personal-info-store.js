@@ -14,15 +14,13 @@ export const usePersonalInfoStore = defineStore('personalInfo', {
   actions: {
     formatTYPST() {
       return `
-#resume-header(
-  name: "${escapeTypstSpecialChars(this.name)}",
-  location: "${escapeTypstSpecialChars(this.location)}",
-  email: "${escapeTypstSpecialChars(this.email)}",
-  phone: "${escapeTypstSpecialChars(this.phone)}",
-  github: "${escapeTypstSpecialChars(this.github)}",
-  linkedin: "${escapeTypstSpecialChars(this.linkedin)}",
-  personal-site: "${escapeTypstSpecialChars(this.personalSite)}",
-)`
+    #let name = "${escapeTypstSpecialChars(this.name)}"
+    #let location = "${escapeTypstSpecialChars(this.location)}"
+    #let email = "${this.email}"
+    #let phone = "${escapeTypstSpecialChars(this.phone)}"
+    #let github = "${escapeTypstSpecialChars(this.github)}"
+    #let linkedin = "${escapeTypstSpecialChars(this.linkedin)}"
+    #let personal-site = "${escapeTypstSpecialChars(this.personalSite)}"`
     },
   },
 })
