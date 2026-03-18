@@ -30,6 +30,15 @@ import { findSectionForElement } from 'src/util/text-matcher.js'
 
 const emit = defineEmits(['scroll-to-section'])
 
+const escapeTypstString = (text) => {
+  return String(text ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\$/g, '\\$')
+    .replace(/@/g, '\\@')
+    .replace(/#/g, '\\#')
+}
+
 // Store instances
 const educationInfoStore = useEducationInfoStore()
 const personalInfoStore = usePersonalInfoStore()
@@ -112,13 +121,13 @@ const generateTypstContent = () => {
   return `
     #set text(size: ${fontSize}pt, fill: rgb("${svgTextColor}"))
     ${typstFormatStore.getTypstFormat}
-    #let name = "${personalInfoStore.name}"
-    #let location = "${personalInfoStore.location}"
-    #let email = "${personalInfoStore.email}"
-    #let phone = "${personalInfoStore.phone}"
-    #let github = "${personalInfoStore.github}"
-    #let linkedin = "${personalInfoStore.linkedin}"
-    #let personal-site = "${personalInfoStore.personalSite}"
+    #let name = "${escapeTypstString(personalInfoStore.name)}"
+    #let location = "${escapeTypstString(personalInfoStore.location)}"
+    #let email = "${escapeTypstString(personalInfoStore.email)}"
+    #let phone = "${escapeTypstString(personalInfoStore.phone)}"
+    #let github = "${escapeTypstString(personalInfoStore.github)}"
+    #let linkedin = "${escapeTypstString(personalInfoStore.linkedin)}"
+    #let personal-site = "${escapeTypstString(personalInfoStore.personalSite)}"
     #set text(
       font: "Times New Roman" // Useless as loaded font is used.
     )
@@ -283,13 +292,13 @@ const exportPdf = async () => {
     const typstContent = `
       #set text(size: ${fontSize}pt, fill: rgb("${svgTextColor}"))
       ${typstFormatStore.getTypstFormat}
-      #let name = "${personalInfoStore.name}"
-      #let location = "${personalInfoStore.location}"
-      #let email = "${personalInfoStore.email}"
-      #let phone = "${personalInfoStore.phone}"
-      #let github = "${personalInfoStore.github}"
-      #let linkedin = "${personalInfoStore.linkedin}"
-      #let personal-site = "${personalInfoStore.personalSite}"
+      #let name = "${escapeTypstString(personalInfoStore.name)}"
+      #let location = "${escapeTypstString(personalInfoStore.location)}"
+      #let email = "${escapeTypstString(personalInfoStore.email)}"
+      #let phone = "${escapeTypstString(personalInfoStore.phone)}"
+      #let github = "${escapeTypstString(personalInfoStore.github)}"
+      #let linkedin = "${escapeTypstString(personalInfoStore.linkedin)}"
+      #let personal-site = "${escapeTypstString(personalInfoStore.personalSite)}"
       #set text(
         font: "Times New Roman" // Useless as loaded font is used.
       )
