@@ -283,7 +283,13 @@ const exportPdf = async () => {
     const typstContent = `
       #set text(size: ${fontSize}pt, fill: rgb("${svgTextColor}"))
       ${typstFormatStore.getTypstFormat}
-      ${personalInfoStore.formatTYPST()}
+      #let name = "${personalInfoStore.name}"
+      #let location = "${personalInfoStore.location}"
+      #let email = "${personalInfoStore.email}"
+      #let phone = "${personalInfoStore.phone}"
+      #let github = "${personalInfoStore.github}"
+      #let linkedin = "${personalInfoStore.linkedin}"
+      #let personal-site = "${personalInfoStore.personalSite}"
       #set text(
         font: "Times New Roman" // Useless as loaded font is used.
       )
