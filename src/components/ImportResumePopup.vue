@@ -8,6 +8,7 @@ import { useEducationInfoStore } from 'src/stores/education-info-store'
 import { useWorkInfoStore } from 'src/stores/work-info-store'
 import { useProjectInfoStore } from 'src/stores/projects-info-store'
 import { useSkillsInfoStore } from 'src/stores/skills-info-store'
+import { generateId } from 'src/util/id-generator.js'
 import { api } from 'boot/axios'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.mjs`
@@ -111,7 +112,7 @@ const updateStores = (data) => {
     location: edu.location,
     startDate: edu.startDate,
     endDate: edu.endDate,
-    points: [edu.coursework.join(', ')],
+    points: [{ id: generateId(), value: edu.coursework.join(', ') }],
   }))
 
   // Work Experience
@@ -122,7 +123,7 @@ const updateStores = (data) => {
     location: work.location,
     startDate: work.startDate,
     endDate: work.endDate,
-    points: work.descriptions,
+    points: work.descriptions.map((desc) => ({ id: generateId(), value: desc })),
   }))
 
   // Projects
@@ -133,7 +134,7 @@ const updateStores = (data) => {
     url: proj.url ?? '',
     startDate: proj.startDate ?? '',
     endDate: proj.endDate ?? '',
-    points: proj.description,
+    points: proj.description.map((desc) => ({ id: generateId(), value: desc })),
   }))
 
   // Skills

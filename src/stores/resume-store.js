@@ -5,6 +5,7 @@ import { useWorkInfoStore } from 'stores/work-info-store.js'
 import { useProjectInfoStore } from 'stores/projects-info-store.js'
 import { useSkillsInfoStore } from 'stores/skills-info-store.js'
 import { useSummaryStore } from 'stores/summary-store.js'
+import { generateId } from 'src/util/id-generator.js'
 
 // Ensure proper deep cloning for state isolation
 function secureDeepClone(obj) {
@@ -55,12 +56,32 @@ export const useSaveManagerStore = defineStore('saveManager', {
       summaryStore.$reset()
 
       // Create completely new copies of the saved states
-      educationStore.$patch(secureDeepClone(this.saves[saveName].educationInfo))
-      personalStore.$patch(secureDeepClone(this.saves[saveName].personalInfo))
-      workStore.$patch(secureDeepClone(this.saves[saveName].workInfo))
-      projectStore.$patch(secureDeepClone(this.saves[saveName].projectInfo))
-      skillsStore.$patch(secureDeepClone(this.saves[saveName].skillsInfo))
-      summaryStore.$patch(secureDeepClone(this.saves[saveName].summaryInfo))
+      const savedState = secureDeepClone(this.saves[saveName])
+
+      // Helper to migrate points from strings to objects
+      const migratePoints = (items) => {
+        if (!items) return
+        items.forEach((item) => {
+          if (
+            Array.isArray(item.points) &&
+            item.points.length > 0 &&
+            typeof item.points[0] === 'string'
+          ) {
+            item.points = item.points.map((p) => ({ id: generateId(), value: p }))
+          }
+        })
+      }
+
+      if (savedState.educationInfo?.education) migratePoints(savedState.educationInfo.education)
+      if (savedState.workInfo?.work) migratePoints(savedState.workInfo.work)
+      if (savedState.projectInfo?.projects) migratePoints(savedState.projectInfo.projects)
+
+      educationStore.$patch(savedState.educationInfo)
+      personalStore.$patch(savedState.personalInfo)
+      workStore.$patch(savedState.workInfo)
+      projectStore.$patch(savedState.projectInfo)
+      skillsStore.$patch(savedState.skillsInfo)
+      summaryStore.$patch(savedState.summaryInfo)
     },
 
     deleteSave(saveName) {

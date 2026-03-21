@@ -1,6 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatBulletPoint, formatTypstDate } from 'src/util/format_bullet_points.js'
 import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
+import { generateId } from 'src/util/id-generator.js'
 
 export const useWorkInfoStore = defineStore('workInfo', {
   state: () => ({
@@ -13,9 +14,21 @@ export const useWorkInfoStore = defineStore('workInfo', {
         startDate: 'Jan 2024',
         endDate: 'Present',
         points: [
-          'Led SupplyTrace’s backend migration from Django to FastAPI, improving API response times by 19% and cutting server usage by 15%. Optimized PostgreSQL performance by 7% while enhancing documentation and adopting Scrum for better team collaboration.',
-          'Designed and implemented ETL pipelines with Prefect/Airflow on university HPC systems using Slurm, increasing data processing reliability by 25%.',
-          'Configured cloud infrastructure and CI/CD pipelines, improving operational efficiency by 15%.',
+          {
+            id: generateId(),
+            value:
+              'Led SupplyTrace’s backend migration from Django to FastAPI, improving API response times by 19% and cutting server usage by 15%. Optimized PostgreSQL performance by 7% while enhancing documentation and adopting Scrum for better team collaboration.',
+          },
+          {
+            id: generateId(),
+            value:
+              'Designed and implemented ETL pipelines with Prefect/Airflow on university HPC systems using Slurm, increasing data processing reliability by 25%.',
+          },
+          {
+            id: generateId(),
+            value:
+              'Configured cloud infrastructure and CI/CD pipelines, improving operational efficiency by 15%.',
+          },
         ],
       },
     ],
@@ -25,8 +38,13 @@ export const useWorkInfoStore = defineStore('workInfo', {
       return this.work
         .map((work) => {
           const bulletPoints = work.points
-            .filter((point) => point.trim() !== '')
-            .map((point) => `       - ${formatBulletPoint(point)}`)
+            .filter(
+              (point) => (typeof point === 'string' ? point : point?.value || '').trim() !== '',
+            )
+            .map(
+              (point) =>
+                `       - ${formatBulletPoint(typeof point === 'string' ? point : point?.value || '')}`,
+            )
             .join('\n')
 
           return `

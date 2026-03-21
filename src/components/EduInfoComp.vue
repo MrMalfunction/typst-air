@@ -2,6 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { useEducationInfoStore } from 'stores/education-info-store.js'
 import draggable from 'vuedraggable'
+import { generateId } from 'src/util/id-generator.js'
 
 const eduInfoStore = useEducationInfoStore()
 const { education } = storeToRefs(eduInfoStore)
@@ -14,7 +15,10 @@ const createDefaultEducationEntry = () => ({
   startDate: 'Start Date',
   endDate: 'End Date',
   degree: 'Degree Name',
-  points: ['Achievement or responsibility 1', 'Achievement or responsibility 2'],
+  points: [
+    { id: generateId(), value: 'Achievement or responsibility 1' },
+    { id: generateId(), value: 'Achievement or responsibility 2' },
+  ],
 })
 
 const addEducation = () => {
@@ -32,7 +36,10 @@ const removeEducation = (index) => {
 
 const addBulletPoint = (educationIndex) => {
   const newPointNumber = education.value[educationIndex].points.length + 1
-  education.value[educationIndex].points.push(`Achievement or responsibility ${newPointNumber}`)
+  education.value[educationIndex].points.push({
+    id: generateId(),
+    value: `Achievement or responsibility ${newPointNumber}`,
+  })
 }
 
 const removeBulletPoint = (educationIndex, pointIndex) => {
@@ -41,7 +48,7 @@ const removeBulletPoint = (educationIndex, pointIndex) => {
     points.splice(pointIndex, 1)
   } else {
     // If it's the last bullet point, reset it to default value instead of removing
-    points[0] = 'Achievement or responsibility 1'
+    points[0] = { id: generateId(), value: 'Achievement or responsibility 1' }
   }
 }
 </script>
@@ -75,28 +82,43 @@ const removeBulletPoint = (educationIndex, pointIndex) => {
               <q-input v-model="element.endDate" label="End Date" outlined required />
             </div>
             <div class="col-12">
-              <div v-for="(_, pointIndex) in element.points" :key="pointIndex">
-                <div class="row q-col-gutter-sm items-center">
-                  <div class="col">
-                    <q-input
-                      v-model="element.points[pointIndex]"
-                      autogrow
-                      label="Bullet Point"
-                      outlined
-                      required
-                    />
+              <draggable
+                v-model="element.points"
+                group="points"
+                handle=".point-drag-handle"
+                item-key="id"
+              >
+                <template #item="{ element: point, index: pointIndex }">
+                  <div class="row q-col-gutter-sm items-center q-mb-sm">
+                    <div class="col-auto">
+                      <q-icon
+                        class="point-drag-handle cursor-move"
+                        color="grey"
+                        name="drag_indicator"
+                        size="sm"
+                      />
+                    </div>
+                    <div class="col">
+                      <q-input
+                        v-model="point.value"
+                        autogrow
+                        label="Bullet Point"
+                        outlined
+                        required
+                      />
+                    </div>
+                    <div class="col-auto">
+                      <q-btn
+                        color="negative"
+                        flat
+                        icon="remove"
+                        round
+                        @click="removeBulletPoint(index, pointIndex)"
+                      />
+                    </div>
                   </div>
-                  <div class="col-auto">
-                    <q-btn
-                      color="negative"
-                      flat
-                      icon="remove"
-                      round
-                      @click="removeBulletPoint(index, pointIndex)"
-                    />
-                  </div>
-                </div>
-              </div>
+                </template>
+              </draggable>
               <q-btn
                 class="q-mt-sm"
                 color="primary"

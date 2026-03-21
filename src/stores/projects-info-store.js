@@ -1,6 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatBulletPoint, formatTypstDate } from 'src/util/format_bullet_points.js'
 import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
+import { generateId } from 'src/util/id-generator.js'
 
 export const useProjectInfoStore = defineStore('projectInfo', {
   state: () => ({
@@ -12,7 +13,7 @@ export const useProjectInfoStore = defineStore('projectInfo', {
         startDate: 'Jan 2025',
         endDate: 'Present',
         url: 'air.amolbohora.com',
-        points: ['Created this website you are interacting with.'],
+        points: [{ id: generateId(), value: 'Created this website you are interacting with.' }],
       },
     ],
   }),
@@ -21,8 +22,13 @@ export const useProjectInfoStore = defineStore('projectInfo', {
       return this.projects
         .map((project) => {
           const bulletPoints = project.points
-            .filter((point) => point.trim() !== '')
-            .map((point) => `       - ${formatBulletPoint(point)}`)
+            .filter(
+              (point) => (typeof point === 'string' ? point : point?.value || '').trim() !== '',
+            )
+            .map(
+              (point) =>
+                `       - ${formatBulletPoint(typeof point === 'string' ? point : point?.value || '')}`,
+            )
             .join('\n')
 
           return `

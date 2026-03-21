@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { handleEditorPaste } from 'src/util/paste_format_handler.js'
 import AiFineTunePopup from 'src/components/ai-fine-tune-popup.vue'
 import { ref, watch } from 'vue'
+import { generateId } from 'src/util/id-generator.js'
 
 const projectInfoStore = useProjectInfoStore()
 const { projects } = storeToRefs(projectInfoStore)
@@ -41,7 +42,10 @@ const createDefaultProjectEntry = () => ({
   startDate: 'Start Date',
   endDate: 'End Date',
   url: 'project-url.com',
-  points: ['Key achievement or responsibility 1', 'Key achievement or responsibility 2'],
+  points: [
+    { id: generateId(), value: 'Key achievement or responsibility 1' },
+    { id: generateId(), value: 'Key achievement or responsibility 2' },
+  ],
 })
 
 const addProject = () => {
@@ -62,7 +66,10 @@ const removeProject = (index) => {
 
 const addProjectBulletPoint = (projectIndex) => {
   const newPointNumber = projects.value[projectIndex].points.length + 1
-  projects.value[projectIndex].points.push(`Key achievement or responsibility ${newPointNumber}`)
+  projects.value[projectIndex].points.push({
+    id: generateId(),
+    value: `Key achievement or responsibility ${newPointNumber}`,
+  })
 }
 
 const removeProjectBulletPoint = (projectIndex, pointIndex) => {
@@ -70,7 +77,7 @@ const removeProjectBulletPoint = (projectIndex, pointIndex) => {
   if (points.length > 1) {
     points.splice(pointIndex, 1)
   } else {
-    points[0] = 'Key achievement or responsibility 1'
+    points[0] = { id: generateId(), value: 'Key achievement or responsibility 1' }
   }
 }
 
@@ -81,7 +88,7 @@ const handleUpdateStrings = (strings) => {
   const projectIndex = projects.value.findIndex((p) => p.name === selectedProjectName.value)
   if (projectIndex !== -1) {
     // Update the points of the matching project entry
-    projects.value[projectIndex].points = strings
+    projects.value[projectIndex].points = strings.map((s) => ({ id: generateId(), value: s }))
   }
 }
 
@@ -99,7 +106,7 @@ const restoreProjectPoints = (index) => {
 const openAiPopup = (company, points) => {
   showPopup.value = true
   selectedProjectName.value = company
-  selectedStringsArray.value = points
+  selectedStringsArray.value = points.map((p) => p.value)
 }
 </script>
 
@@ -147,29 +154,44 @@ const openAiPopup = (company, points) => {
                   <q-tooltip>Fine Tune points to a job.</q-tooltip>
                 </q-btn>
               </div>
-              <div v-for="(_, pointIndex) in element.points" :key="pointIndex">
-                <div class="row q-col-gutter-sm items-center q-mb-sm">
-                  <div class="col">
-                    <q-editor
-                      v-model="element.points[pointIndex]"
-                      :fonts="{ arial: 'Arial' }"
-                      :toolbar="[['bold'], ['link'], ['undo', 'redo']]"
-                      content-class="editor-content"
-                      min-height="5rem"
-                      @paste="handleEditorPaste"
-                    />
+              <draggable
+                v-model="element.points"
+                group="points"
+                handle=".point-drag-handle"
+                item-key="id"
+              >
+                <template #item="{ element: point, index: pointIndex }">
+                  <div class="row q-col-gutter-sm items-center q-mb-sm">
+                    <div class="col-auto">
+                      <q-icon
+                        class="point-drag-handle cursor-move"
+                        color="grey"
+                        name="drag_indicator"
+                        size="sm"
+                      />
+                    </div>
+                    <div class="col">
+                      <q-editor
+                        v-model="point.value"
+                        :fonts="{ arial: 'Arial' }"
+                        :toolbar="[['bold'], ['link'], ['undo', 'redo']]"
+                        content-class="editor-content"
+                        min-height="5rem"
+                        @paste="handleEditorPaste"
+                      />
+                    </div>
+                    <div class="col-auto">
+                      <q-btn
+                        color="negative"
+                        flat
+                        icon="remove"
+                        round
+                        @click="removeProjectBulletPoint(index, pointIndex)"
+                      />
+                    </div>
                   </div>
-                  <div class="col-auto">
-                    <q-btn
-                      color="negative"
-                      flat
-                      icon="remove"
-                      round
-                      @click="removeProjectBulletPoint(index, pointIndex)"
-                    />
-                  </div>
-                </div>
-              </div>
+                </template>
+              </draggable>
               <q-btn
                 class="q-mt-sm"
                 color="primary"
