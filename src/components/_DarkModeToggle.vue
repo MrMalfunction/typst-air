@@ -29,10 +29,10 @@ const toggleDark = () => {
       :color="isDark ? 'white' : 'primary'"
       :text-color="isDark ? 'primary' : 'white'"
       flat
+      dense
       round
-      size="md"
       @click="toggleDark"
-      class="q-ml-md"
+      class="q-ml-sm"
     >
       <q-tooltip>{{ isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</q-tooltip>
     </q-btn>

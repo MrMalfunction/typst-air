@@ -1,20 +1,33 @@
 <template>
-  <div class="bg-primary text-white q-pa-md">
-    <q-toolbar>
-      <q-toolbar-title>AI Resume</q-toolbar-title>
+  <q-toolbar class="bg-primary text-white app-header">
+    <q-toolbar-title class="text-weight-medium">AI Resume</q-toolbar-title>
 
-      <q-btn
-        flat
-        href="https://amolbohora.userjot.com/board/all"
-        label="Feedback"
-        target="_blank"
-        type="a"
-      />
-      <q-btn flat label="FAQ" @click="faqDialog = true" />
-      <q-space />
-      <DarkModeToggle />
-    </q-toolbar>
-  </div>
+    <q-btn flat dense round icon="help_outline">
+      <q-menu anchor="bottom right" self="top right">
+        <q-list dense style="min-width: 180px">
+          <q-item v-close-popup clickable @click="faqDialog = true">
+            <q-item-section avatar><q-icon name="quiz" /></q-item-section>
+            <q-item-section>FAQ</q-item-section>
+          </q-item>
+          <q-item
+            v-close-popup
+            clickable
+            href="https://amolbohora.userjot.com/board/all"
+            tag="a"
+            target="_blank"
+          >
+            <q-item-section avatar><q-icon name="feedback" /></q-item-section>
+            <q-item-section>Feedback</q-item-section>
+          </q-item>
+          <q-item v-close-popup clickable to="/acknowledgments">
+            <q-item-section avatar><q-icon name="info_outline" /></q-item-section>
+            <q-item-section>Acknowledgments</q-item-section>
+          </q-item>
+        </q-list>
+      </q-menu>
+    </q-btn>
+    <DarkModeToggle />
+  </q-toolbar>
 
   <q-dialog v-model="faqDialog">
     <q-card>
@@ -62,3 +75,9 @@ import DarkModeToggle from './_DarkModeToggle.vue'
 
 const faqDialog = ref(false)
 </script>
+
+<style scoped>
+.app-header {
+  min-height: 48px;
+}
+</style>

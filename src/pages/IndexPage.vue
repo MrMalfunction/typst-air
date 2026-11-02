@@ -6,21 +6,12 @@
       <q-page class="row no-wrap">
         <!-- Left side form -->
         <div class="col form-container q-pa-md">
-          <!-- Controls Section -->
-          <div class="row q-col-gutter-md q-mb-md">
+          <!-- Controls -->
+          <div class="row items-center no-wrap q-mb-md form-toolbar">
             <SaveComp />
+            <q-space />
             <StyleOptionsComp />
           </div>
-
-          <!-- Section Reorder -->
-          <q-expansion-item
-            expand-separator
-            icon="reorder"
-            label="Reorder Sections"
-            class="q-mb-md"
-          >
-            <SectionReorderComp />
-          </q-expansion-item>
 
           <!-- Personal Information -->
           <div ref="personalInfoSection" class="text-h6">Personal Information</div>
@@ -52,15 +43,6 @@
         <PreviewSVG @scroll-to-section="scrollToSection" />
       </q-page>
     </q-page-container>
-
-    <!-- Footer -->
-    <q-footer class="bg-white text-grey-8">
-      <q-toolbar class="justify-center">
-        <router-link class="text-grey-8 text-decoration-none" to="/acknowledgments">
-          Third-Party Acknowledgments
-        </router-link>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>
 
@@ -83,7 +65,6 @@ import SkillsInfoComp from 'components/SkillsInfoComp.vue'
 import PreviewSVG from 'components/PreviewSVG.vue'
 import SaveComp from 'components/SaveComp.vue'
 import StyleOptionsComp from 'components/StyleOptionsComp.vue'
-import SectionReorderComp from 'components/SectionReorderComp.vue'
 
 // Store setup
 const sectionSeqStore = useSectionSeqStore()
@@ -204,6 +185,10 @@ const findEntryElement = (sectionType, entryIndex) => {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+}
+
+.form-toolbar {
+  min-width: 0;
 }
 
 .section-container {

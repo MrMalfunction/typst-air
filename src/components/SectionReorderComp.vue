@@ -1,24 +1,17 @@
 <template>
-  <q-card class="q-mb-md">
-    <q-card-section class="q-pb-sm">
-      <div class="text-h6">Reorder Sections</div>
-    </q-card-section>
-    <q-card-section class="q-pt-none">
-      <draggable
-        v-model="editableSectionSeq"
-        item-key="value"
-        @end="onDragEnd"
-        tag="div"
-        class="q-gutter-sm row"
-      >
-        <template #item="{ element }">
-          <q-chip color="primary" text-color="white" icon="drag_indicator" class="cursor-pointer">
-            {{ formatSectionName(element) }}
-          </q-chip>
-        </template>
-      </draggable>
-    </q-card-section>
-  </q-card>
+  <draggable
+    v-model="editableSectionSeq"
+    item-key="value"
+    @end="onDragEnd"
+    tag="div"
+    class="column q-gutter-xs"
+  >
+    <template #item="{ element }">
+      <q-chip outline color="primary" icon="drag_indicator" class="cursor-move q-ma-none">
+        {{ formatSectionName(element) }}
+      </q-chip>
+    </template>
+  </draggable>
 </template>
 
 <script setup>
