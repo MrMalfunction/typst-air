@@ -15,7 +15,7 @@
 
           <!-- Personal Information -->
           <div ref="personalInfoSection" class="text-h6">Personal Information</div>
-          <div class="row q-col-gutter-md">
+          <div class="row q-col-gutter-sm">
             <PersonalInfoComp />
 
             <!-- Summary Section -->
@@ -99,10 +99,16 @@ const setComponentRef = (section, el) => {
 
 // Scrolling functionality
 const scrollToSection = async (result) => {
+  const { section: sectionType, entryIndex } = result
+
+  // Expand the matching entry card so its fields are visible
+  if (entryIndex !== null) {
+    componentRefs.value[sectionType]?.openEntry?.(entryIndex)
+  }
+
   await nextTick()
 
   let targetElement = null
-  const { section: sectionType, entryIndex } = result
 
   // Try to scroll to specific entry if index provided
   if (entryIndex !== null) {

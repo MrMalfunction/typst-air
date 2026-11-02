@@ -2,11 +2,25 @@
 import draggable from 'vuedraggable'
 import { useProjectInfoStore } from 'stores/projects-info-store.js'
 import { storeToRefs } from 'pinia'
-import { handleEditorPaste } from 'src/util/paste_format_handler.js'
+import EntryCard from 'src/components/EntryCard.vue'
+import BulletList from 'src/components/BulletList.vue'
+import { ref } from 'vue'
 import { generateId } from 'src/util/id-generator.js'
 
 const projectInfoStore = useProjectInfoStore()
 const { projects } = storeToRefs(projectInfoStore)
+
+// Only one entry is expanded at a time
+const openId = ref(null)
+const toggleEntry = (id, open) => {
+  openId.value = open ? id : null
+}
+const openEntry = (index) => {
+  openId.value = projects.value[index]?.id ?? null
+}
+defineExpose({ openEntry })
+
+const dateRange = (entry) => [entry.startDate, entry.endDate].filter(Boolean).join(' – ')
 
 const createDefaultProjectEntry = () => ({
   id: Date.now(),
@@ -22,7 +36,9 @@ const createDefaultProjectEntry = () => ({
 })
 
 const addProject = () => {
-  projects.value.push(createDefaultProjectEntry())
+  const newEntry = createDefaultProjectEntry()
+  projects.value.push(newEntry)
+  openId.value = newEntry.id
 }
 
 const removeProject = (index) => {
@@ -32,120 +48,52 @@ const removeProject = (index) => {
     projects.value[0] = createDefaultProjectEntry()
   }
 }
-
-const addProjectBulletPoint = (projectIndex) => {
-  const newPointNumber = projects.value[projectIndex].points.length + 1
-  projects.value[projectIndex].points.push({
-    id: generateId(),
-    value: `Key achievement or responsibility ${newPointNumber}`,
-  })
-}
-
-const removeProjectBulletPoint = (projectIndex, pointIndex) => {
-  const points = projects.value[projectIndex].points
-  if (points.length > 1) {
-    points.splice(pointIndex, 1)
-  } else {
-    points[0] = { id: generateId(), value: 'Key achievement or responsibility 1' }
-  }
-}
 </script>
 
 <template>
   <div class="col-12">
     <div class="text-h6">Projects</div>
-    <draggable v-model="projects" class="q-gutter-y-md" handle=".drag-handle" item-key="id">
+    <draggable v-model="projects" class="q-gutter-y-sm" handle=".drag-handle" item-key="id">
       <template #item="{ element, index }">
-        <q-card class="q-pa-md" :data-project-index="index">
-          <div class="row q-col-gutter-md">
-            <div class="col-12">
-              <q-input v-model="element.name" label="Project Name" outlined required />
+        <EntryCard
+          :data-project-index="index"
+          :expanded="openId === element.id"
+          :subtitle="[element.role, dateRange(element)].filter(Boolean).join(' · ')"
+          :title="element.name"
+          placeholder="Untitled project"
+          @delete="removeProject(index)"
+          @update:expanded="(open) => toggleEntry(element.id, open)"
+        >
+          <div class="row q-col-gutter-sm">
+            <div class="col-12 col-sm-6">
+              <q-input v-model="element.name" dense label="Project name" outlined />
             </div>
-            <div class="col-12">
-              <q-input v-model="element.role" label="Role (Optional)" outlined />
+            <div class="col-12 col-sm-6">
+              <q-input v-model="element.role" dense label="Role" outlined placeholder="Optional" />
             </div>
-            <div class="col-12">
-              <q-input v-model="element.url" label="Project URL (Optional)" outlined />
+            <div class="col-12 col-sm-4">
+              <q-input v-model="element.url" dense label="URL" outlined placeholder="Optional" />
             </div>
-            <div class="col-6">
-              <q-input v-model="element.startDate" label="Start Date (Optional)" outlined />
+            <div class="col-6 col-sm-4">
+              <q-input v-model="element.startDate" dense label="Start" outlined />
             </div>
-            <div class="col-6">
-              <q-input v-model="element.endDate" label="End Date (Optional)" outlined />
-            </div>
-            <div class="col-12">
-              <draggable
-                v-model="element.points"
-                group="points"
-                handle=".point-drag-handle"
-                item-key="id"
-              >
-                <template #item="{ element: point, index: pointIndex }">
-                  <div class="row q-col-gutter-sm items-center q-mb-sm">
-                    <div class="col-auto">
-                      <q-icon
-                        class="point-drag-handle cursor-move"
-                        color="grey"
-                        name="drag_indicator"
-                        size="sm"
-                      />
-                    </div>
-                    <div class="col">
-                      <q-editor
-                        v-model="point.value"
-                        :fonts="{ arial: 'Arial' }"
-                        :toolbar="[['bold'], ['link'], ['undo', 'redo']]"
-                        content-class="editor-content"
-                        min-height="5rem"
-                        @paste="handleEditorPaste"
-                      />
-                    </div>
-                    <div class="col-auto">
-                      <q-btn
-                        color="negative"
-                        flat
-                        icon="remove"
-                        round
-                        @click="removeProjectBulletPoint(index, pointIndex)"
-                      />
-                    </div>
-                  </div>
-                </template>
-              </draggable>
-              <q-btn
-                class="q-mt-sm"
-                color="primary"
-                flat
-                icon="add"
-                label="Add Bullet Point"
-                @click="addProjectBulletPoint(index)"
-              />
+            <div class="col-6 col-sm-4">
+              <q-input v-model="element.endDate" dense label="End" outlined />
             </div>
           </div>
-          <div class="col-12 row items-center">
-            <q-btn class="drag-handle" flat icon="drag_indicator" round>
-              <q-tooltip hove>Drag and rearrange order</q-tooltip>
-            </q-btn>
-            <q-btn
-              class="q-ml-auto"
-              color="negative"
-              flat
-              icon="delete"
-              round
-              @click="removeProject(index)"
-            >
-              <q-tooltip>Delete Entry</q-tooltip>
-            </q-btn>
-          </div>
-        </q-card>
+          <BulletList v-model="element.points" class="q-mt-sm" rich />
+        </EntryCard>
       </template>
     </draggable>
-    <q-btn class="q-mt-md" color="primary" icon="add" label="Add Project" @click="addProject" />
+    <q-btn
+      class="q-mt-sm"
+      color="primary"
+      dense
+      flat
+      icon="add"
+      label="Add project"
+      no-caps
+      @click="addProject"
+    />
   </div>
 </template>
-
-<style scoped>
-.drag-handle {
-  cursor: move;
-}
-</style>

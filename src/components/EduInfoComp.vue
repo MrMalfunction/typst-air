@@ -2,10 +2,25 @@
 import { storeToRefs } from 'pinia'
 import { useEducationInfoStore } from 'stores/education-info-store.js'
 import draggable from 'vuedraggable'
+import { ref } from 'vue'
 import { generateId } from 'src/util/id-generator.js'
+import EntryCard from 'src/components/EntryCard.vue'
+import BulletList from 'src/components/BulletList.vue'
 
 const eduInfoStore = useEducationInfoStore()
 const { education } = storeToRefs(eduInfoStore)
+
+// Only one entry is expanded at a time
+const openId = ref(null)
+const toggleEntry = (id, open) => {
+  openId.value = open ? id : null
+}
+const openEntry = (index) => {
+  openId.value = education.value[index]?.id ?? null
+}
+defineExpose({ openEntry })
+
+const dateRange = (entry) => [entry.startDate, entry.endDate].filter(Boolean).join(' – ')
 
 // Default education entry template
 const createDefaultEducationEntry = () => ({
@@ -22,7 +37,9 @@ const createDefaultEducationEntry = () => ({
 })
 
 const addEducation = () => {
-  education.value.push(createDefaultEducationEntry())
+  const newEntry = createDefaultEducationEntry()
+  education.value.push(newEntry)
+  openId.value = newEntry.id
 }
 
 const removeEducation = (index) => {
@@ -33,24 +50,6 @@ const removeEducation = (index) => {
     education.value[0] = createDefaultEducationEntry()
   }
 }
-
-const addBulletPoint = (educationIndex) => {
-  const newPointNumber = education.value[educationIndex].points.length + 1
-  education.value[educationIndex].points.push({
-    id: generateId(),
-    value: `Achievement or responsibility ${newPointNumber}`,
-  })
-}
-
-const removeBulletPoint = (educationIndex, pointIndex) => {
-  const points = education.value[educationIndex].points
-  if (points.length > 1) {
-    points.splice(pointIndex, 1)
-  } else {
-    // If it's the last bullet point, reset it to default value instead of removing
-    points[0] = { id: generateId(), value: 'Achievement or responsibility 1' }
-  }
-}
 </script>
 
 <template>
@@ -59,95 +58,61 @@ const removeBulletPoint = (educationIndex, pointIndex) => {
     <div class="text-h6">Education</div>
     <draggable
       v-model="eduInfoStore.education"
-      class="q-gutter-y-md"
+      class="q-gutter-y-sm"
       handle=".drag-handle"
       item-key="id"
     >
       <template #item="{ element, index }">
-        <q-card class="q-pa-md" :data-education-index="index">
-          <div class="row q-col-gutter-md">
-            <div class="col-12">
-              <q-input v-model="element.institution" label="Institution" outlined required />
+        <EntryCard
+          :data-education-index="index"
+          :expanded="openId === element.id"
+          :subtitle="[element.degree, dateRange(element)].filter(Boolean).join(' · ')"
+          :title="element.institution"
+          placeholder="Untitled school"
+          @delete="removeEducation(index)"
+          @update:expanded="(open) => toggleEntry(element.id, open)"
+        >
+          <div class="row q-col-gutter-sm">
+            <div class="col-12 col-sm-6">
+              <q-input v-model="element.institution" dense label="Institution" outlined />
             </div>
-            <div class="col-12">
-              <q-input v-model="element.degree" label="Degree" outlined required />
+            <div class="col-12 col-sm-6">
+              <q-input v-model="element.degree" dense label="Degree" outlined />
             </div>
-            <div class="col-12">
-              <q-input v-model="element.location" label="Location" outlined required />
+            <div class="col-12 col-sm-4">
+              <q-input v-model="element.location" dense label="Location" outlined />
             </div>
-            <div class="col-6">
-              <q-input v-model="element.startDate" label="Start Date (Optional)" outlined />
-            </div>
-            <div class="col-6">
-              <q-input v-model="element.endDate" label="End Date" outlined required />
-            </div>
-            <div class="col-12">
-              <draggable
-                v-model="element.points"
-                group="points"
-                handle=".point-drag-handle"
-                item-key="id"
-              >
-                <template #item="{ element: point, index: pointIndex }">
-                  <div class="row q-col-gutter-sm items-center q-mb-sm">
-                    <div class="col-auto">
-                      <q-icon
-                        class="point-drag-handle cursor-move"
-                        color="grey"
-                        name="drag_indicator"
-                        size="sm"
-                      />
-                    </div>
-                    <div class="col">
-                      <q-input
-                        v-model="point.value"
-                        autogrow
-                        label="Bullet Point"
-                        outlined
-                        required
-                      />
-                    </div>
-                    <div class="col-auto">
-                      <q-btn
-                        color="negative"
-                        flat
-                        icon="remove"
-                        round
-                        @click="removeBulletPoint(index, pointIndex)"
-                      />
-                    </div>
-                  </div>
-                </template>
-              </draggable>
-              <q-btn
-                class="q-mt-sm"
-                color="primary"
-                flat
-                icon="add"
-                label="Add Bullet Point"
-                @click="addBulletPoint(index)"
+            <div class="col-6 col-sm-4">
+              <q-input
+                v-model="element.startDate"
+                dense
+                label="Start"
+                outlined
+                placeholder="Optional"
               />
             </div>
+            <div class="col-6 col-sm-4">
+              <q-input v-model="element.endDate" dense label="End" outlined />
+            </div>
           </div>
-          <div class="col-12 row items-center">
-            <q-btn class="drag-handle" flat icon="drag_indicator" round>
-              <q-tooltip hove>Drag and rearrange order</q-tooltip>
-            </q-btn>
-            <q-btn
-              class="q-ml-auto"
-              color="negative"
-              flat
-              icon="delete"
-              round
-              @click="removeEducation(index)"
-            >
-              <q-tooltip>Delete Entry</q-tooltip>
-            </q-btn>
-          </div>
-        </q-card>
+          <BulletList
+            v-model="element.points"
+            class="q-mt-sm"
+            default-text="Achievement or responsibility"
+          />
+        </EntryCard>
       </template>
     </draggable>
-    <q-btn class="q-mt-md" color="primary" icon="add" label="Add Education" @click="addEducation" />
+    <q-btn
+      class="q-mt-sm"
+      color="primary"
+      dense
+      flat
+      icon="add"
+      label="Add education"
+      no-caps
+      @click="addEducation"
+    />
   </div>
 </template>
 

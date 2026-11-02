@@ -11,13 +11,13 @@ const { summary } = storeToRefs(summaryStore)
     <div class="text-h6">Summary</div>
     <q-input
       v-model="summary"
-      label="Summary"
-      outlined
-      type="textarea"
       autogrow
-      hint="A brief summary about you."
       counter
+      dense
       maxlength="500"
+      outlined
+      placeholder="Optional: a short summary about you"
+      type="textarea"
     />
   </div>
 </template>

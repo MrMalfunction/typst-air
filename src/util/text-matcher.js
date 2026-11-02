@@ -231,7 +231,7 @@ const findInEducationWithIndex = (clickedText, exactOnly) => {
       edu.degree,
       edu.startDate,
       edu.endDate,
-      ...edu.points,
+      ...edu.points.map((p) => p.value),
     ]
 
     const hasContent = fields.some((field) => field?.trim())
@@ -258,7 +258,7 @@ const findInWorkWithIndex = (clickedText, exactOnly) => {
       work.location,
       work.startDate,
       work.endDate,
-      ...work.points,
+      ...work.points.map((p) => p.value),
     ]
 
     const hasContent = fields.some((field) => field?.trim())
@@ -285,7 +285,7 @@ const findInProjectsWithIndex = (clickedText, exactOnly) => {
       project.url,
       project.startDate,
       project.endDate,
-      ...project.points,
+      ...project.points.map((p) => p.value),
     ]
 
     const hasContent = fields.some((field) => field?.trim())

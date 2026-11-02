@@ -28,51 +28,75 @@ const removeSkill = (index) => {
 <template>
   <div class="col-12">
     <div class="text-h6">Skills</div>
-    <draggable v-model="skills" class="q-gutter-y-md" handle=".drag-handle" item-key="id">
+    <draggable v-model="skills" class="q-gutter-y-sm" handle=".drag-handle" item-key="id">
       <template #item="{ element, index }">
-        <q-card class="q-pa-md" :data-skill-index="index">
-          <div class="row q-col-gutter-md">
-            <div class="col-12">
-              <q-input v-model="element.heading" label="Category" outlined required />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="element.content"
-                autogrow
-                hint="Enter skills separated by commas"
-                label="Skills (comma-separated)"
-                outlined
-                required
-                type="textarea"
-              />
-            </div>
+        <div class="row items-start no-wrap skill-row" :data-skill-index="index">
+          <q-icon
+            class="drag-handle cursor-move skill-row__tool"
+            color="grey-6"
+            name="drag_indicator"
+            size="20px"
+          >
+            <q-tooltip>Drag to reorder</q-tooltip>
+          </q-icon>
+          <div class="skill-row__heading">
+            <q-input v-model="element.heading" dense label="Category" outlined />
           </div>
-          <div class="col-12 row items-center">
-            <q-btn class="drag-handle" flat icon="drag_indicator" round>
-              <q-tooltip hove>Drag and rearrange order</q-tooltip>
-            </q-btn>
-            <q-btn
-              class="q-ml-auto"
-              color="negative"
-              flat
-              icon="delete"
-              round
-              @click="removeSkill(index)"
-            >
-              <q-tooltip>Delete Entry</q-tooltip>
-            </q-btn>
+          <div class="col">
+            <q-input
+              v-model="element.content"
+              autogrow
+              dense
+              label="Skills, comma-separated"
+              outlined
+            />
           </div>
-        </q-card>
+          <q-btn
+            class="skill-row__tool"
+            color="grey-7"
+            dense
+            flat
+            icon="delete_outline"
+            round
+            size="sm"
+            @click="removeSkill(index)"
+          >
+            <q-tooltip>Delete category</q-tooltip>
+          </q-btn>
+        </div>
       </template>
     </draggable>
     <q-btn
-      class="q-mt-md"
+      class="q-mt-sm"
       color="primary"
+      dense
+      flat
       icon="add"
-      label="Add Skill Category"
+      label="Add skill category"
+      no-caps
       @click="addSkill"
     />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.skill-row {
+  gap: 6px;
+}
+
+.skill-row__heading {
+  width: 32%;
+  min-width: 120px;
+}
+
+.skill-row__tool {
+  margin-top: 8px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.skill-row:hover .skill-row__tool,
+.skill-row:focus-within .skill-row__tool {
+  opacity: 1;
+}
+</style>

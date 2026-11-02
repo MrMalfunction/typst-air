@@ -10,25 +10,25 @@ const { name, location, email, phone, github, linkedin, personalSite } =
 
 <template>
   <div class="col-12">
-    <q-input v-model="name" label="Name" outlined required />
+    <q-input v-model="name" dense label="Name" outlined />
   </div>
-  <div class="col-12">
-    <q-input v-model="location" label="Location" outlined required />
+  <div class="col-12 col-sm-6">
+    <q-input v-model="location" dense label="Location" outlined />
   </div>
-  <div class="col-12">
-    <q-input v-model="email" label="Email" outlined required type="email" />
+  <div class="col-12 col-sm-6">
+    <q-input v-model="email" dense label="Email" outlined type="email" />
   </div>
-  <div class="col-12">
-    <q-input v-model="phone" label="Phone" outlined required />
+  <div class="col-12 col-sm-6">
+    <q-input v-model="phone" dense label="Phone" outlined />
   </div>
-  <div class="col-12">
-    <q-input v-model="github" label="GitHub (optional)" outlined />
+  <div class="col-12 col-sm-6">
+    <q-input v-model="linkedin" dense label="LinkedIn" outlined />
   </div>
-  <div class="col-12">
-    <q-input v-model="linkedin" label="LinkedIn" outlined required />
+  <div class="col-12 col-sm-6">
+    <q-input v-model="github" dense label="GitHub" outlined placeholder="Optional" />
   </div>
-  <div class="col-12">
-    <q-input v-model="personalSite" label="Personal Website (optional)" outlined />
+  <div class="col-12 col-sm-6">
+    <q-input v-model="personalSite" dense label="Website" outlined placeholder="Optional" />
   </div>
 </template>
 
