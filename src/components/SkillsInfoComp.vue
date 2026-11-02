@@ -27,7 +27,6 @@ const removeSkill = (index) => {
 
 <template>
   <div class="col-12">
-    <div class="text-h6">Skills</div>
     <draggable v-model="skills" class="q-gutter-y-sm" handle=".drag-handle" item-key="id">
       <template #item="{ element, index }">
         <div class="row items-start no-wrap skill-row" :data-skill-index="index">

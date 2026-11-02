@@ -1,5 +1,5 @@
 <template>
-  <q-toolbar class="bg-primary text-white app-header">
+  <q-toolbar :class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'" class="text-white app-header">
     <q-toolbar-title class="text-weight-medium">AI Resume</q-toolbar-title>
 
     <q-btn flat dense round icon="help_outline">
@@ -46,8 +46,8 @@
 
         <div class="text-subtitle2">Can I reorder sections?</div>
         <p>
-          Yes, use the drag handle icon (≡) to reorder entries within work experience, education,
-          and projects sections.
+          Yes. Use the ↑ ↓ arrows next to a section's title to move the whole section, and the drag
+          handle (⠿) on an entry to reorder entries within a section.
         </p>
 
         <div class="text-subtitle2">Is my data shared</div>

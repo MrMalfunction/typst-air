@@ -1,7 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useStyleStore } from 'stores/style-store.js'
-import SectionReorderComp from 'components/SectionReorderComp.vue'
 
 const styleStore = useStyleStore()
 const { fontSizePt, colorCheck, marginInches } = storeToRefs(styleStore)
@@ -39,12 +38,6 @@ const { fontSizePt, colorCheck, marginInches } = storeToRefs(styleStore)
           </div>
         </div>
         <q-toggle v-model="colorCheck" class="q-mt-sm" dense label="Colored headings" />
-
-        <q-separator class="q-my-md" />
-
-        <div class="text-subtitle2">Section order</div>
-        <div class="text-caption text-grey-7 q-mb-sm">Drag to reorder</div>
-        <SectionReorderComp />
       </div>
     </q-menu>
   </q-btn>

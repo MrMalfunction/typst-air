@@ -55,7 +55,6 @@ const removeEducation = (index) => {
 <template>
   <!-- Education Section -->
   <div class="col-12">
-    <div class="text-h6">Education</div>
     <draggable
       v-model="eduInfoStore.education"
       class="q-gutter-y-sm"

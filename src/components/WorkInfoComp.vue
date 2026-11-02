@@ -53,7 +53,6 @@ const removeWork = (index) => {
 <template>
   <!-- Work Experience Section -->
   <div class="col-12">
-    <div class="text-h6">Work Experience</div>
     <draggable v-model="work" class="q-gutter-y-sm" handle=".drag-handle" item-key="id">
       <template #item="{ element, index }">
         <EntryCard

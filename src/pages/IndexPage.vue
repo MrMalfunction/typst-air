@@ -1,40 +1,96 @@
 <template>
-  <q-layout>
-    <HeaderComp />
+  <q-layout view="hHh lpr fff">
+    <q-header>
+      <HeaderComp />
+    </q-header>
 
     <q-page-container>
       <q-page class="row no-wrap">
         <!-- Left side form -->
-        <div class="col form-container q-pa-md">
-          <!-- Controls -->
-          <div class="row items-center no-wrap q-mb-md form-toolbar">
-            <SaveComp />
-            <q-space />
-            <StyleOptionsComp />
+        <div ref="formContainer" class="col form-container" @scroll.passive="updateActiveSection">
+          <!-- Controls + section tabs, pinned while scrolling -->
+          <div class="form-sticky">
+            <div class="row items-center no-wrap form-toolbar">
+              <SaveComp />
+              <q-space />
+              <StyleOptionsComp />
+            </div>
+            <q-tabs
+              :model-value="activeSection"
+              active-color="primary"
+              align="left"
+              class="text-grey-7"
+              dense
+              indicator-color="primary"
+              inline-label
+              no-caps
+              outside-arrows
+            >
+              <q-tab
+                v-for="tab in navTabs"
+                :key="tab.key"
+                :label="tab.label"
+                :name="tab.key"
+                @click="jumpTo(tab.key)"
+              />
+            </q-tabs>
+            <q-separator />
           </div>
 
-          <!-- Personal Information -->
-          <div ref="personalInfoSection" class="text-h6">Personal Information</div>
-          <div class="row q-col-gutter-sm">
-            <PersonalInfoComp />
+          <div class="form-body">
+            <!-- Personal Information -->
+            <div ref="personalInfoSection" class="text-h6 section-anchor">Personal Information</div>
+            <div class="row q-col-gutter-sm">
+              <PersonalInfoComp />
 
-            <!-- Summary Section -->
-            <div ref="summarySection" class="col-12">
-              <SummaryInfoComp />
-            </div>
+              <!-- Summary Section -->
+              <div ref="summarySection" class="col-12">
+                <SummaryInfoComp />
+              </div>
 
-            <!-- Dynamic Sections -->
-            <div
-              v-for="section in sectionSeq"
-              :key="section"
-              :ref="(el) => setSectionRef(section, el)"
-              class="section-container"
-            >
-              <component
-                :is="componentMap[section]"
-                :ref="(el) => setComponentRef(section, el)"
-                :key="`comp-${section}`"
-              />
+              <!-- Dynamic Sections (order matches the resume) -->
+              <TransitionGroup class="col-12" name="section-move" tag="div">
+                <div
+                  v-for="(section, position) in sectionSeq"
+                  :key="section"
+                  :ref="(el) => setSectionRef(section, el)"
+                  class="section-container section-anchor"
+                >
+                  <div class="row items-center no-wrap section-heading">
+                    <div class="text-h6">{{ sectionTitles[section] }}</div>
+                    <q-space />
+                    <q-btn
+                      :disable="position === 0"
+                      color="grey-7"
+                      dense
+                      flat
+                      icon="arrow_upward"
+                      round
+                      size="sm"
+                      @click="moveSection(section, position - 1)"
+                    >
+                      <q-tooltip>Move {{ sectionTitles[section] }} up on the resume</q-tooltip>
+                    </q-btn>
+                    <q-btn
+                      :disable="position === sectionSeq.length - 1"
+                      color="grey-7"
+                      dense
+                      flat
+                      icon="arrow_downward"
+                      round
+                      size="sm"
+                      @click="moveSection(section, position + 1)"
+                    >
+                      <q-tooltip>Move {{ sectionTitles[section] }} down on the resume</q-tooltip>
+                    </q-btn>
+                  </div>
+                  <component
+                    :is="componentMap[section]"
+                    :ref="(el) => setComponentRef(section, el)"
+                    :key="`comp-${section}`"
+                  />
+                </div>
+              </TransitionGroup>
             </div>
           </div>
         </div>
@@ -48,7 +104,7 @@
 
 <script setup>
 // Vue imports
-import { ref, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 
 // Pinia imports
 import { storeToRefs } from 'pinia'
@@ -83,6 +139,67 @@ const personalInfoSection = ref(null)
 const summarySection = ref(null)
 const sectionRefs = ref({})
 const componentRefs = ref({})
+
+const sectionTitles = {
+  edu: 'Education',
+  work: 'Work Experience',
+  projects: 'Projects',
+  skills: 'Skills',
+}
+
+// Move a section and keep it in view
+const moveSection = async (section, newPosition) => {
+  sectionSeqStore.moveSection(section, newPosition)
+  await nextTick()
+  jumpTo(section)
+}
+
+// Section tabs (follow the user's section order)
+const sectionLabels = {
+  edu: 'Education',
+  work: 'Experience',
+  projects: 'Projects',
+  skills: 'Skills',
+}
+const navTabs = computed(() => [
+  { key: 'personal', label: 'Profile' },
+  ...sectionSeq.value.map((key) => ({ key, label: sectionLabels[key] })),
+])
+
+const formContainer = ref(null)
+const activeSection = ref('personal')
+
+const sectionElement = (key) =>
+  key === 'personal' ? personalInfoSection.value : sectionRefs.value[key]
+
+// While a tab-triggered smooth scroll runs, keep the clicked tab active
+let tabLockUntil = 0
+
+const jumpTo = (key) => {
+  activeSection.value = key
+  tabLockUntil = Date.now() + 1000
+  scrollToSection({ section: key, entryIndex: null })
+}
+
+// Highlight the tab of the section currently at the top of the form
+const updateActiveSection = () => {
+  const container = formContainer.value
+  if (!container || Date.now() < tabLockUntil) return
+
+  // At the very bottom, the last section may never reach the top
+  if (container.scrollTop + container.clientHeight >= container.scrollHeight - 4) {
+    activeSection.value = navTabs.value.at(-1).key
+    return
+  }
+
+  const threshold = container.getBoundingClientRect().top + 120
+  let current = navTabs.value[0].key
+  for (const { key } of navTabs.value) {
+    const el = sectionElement(key)
+    if (el && el.getBoundingClientRect().top <= threshold) current = key
+  }
+  activeSection.value = current
+}
 
 // Ref setters
 const setSectionRef = (section, el) => {
@@ -187,14 +304,42 @@ const findEntryElement = (sectionType, entryIndex) => {
 
 <style scoped>
 .form-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  height: calc(100vh - 48px);
   overflow-y: auto;
+}
+
+.form-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #fff;
+}
+
+body.body--dark .form-sticky {
+  background: var(--q-dark-page);
 }
 
 .form-toolbar {
   min-width: 0;
+  padding: 8px 16px 0;
+}
+
+.form-body {
+  padding: 8px 16px 24px;
+}
+
+/* Keep jump targets clear of the sticky toolbar and tabs */
+.section-anchor,
+.form-body :deep(.entry-card) {
+  scroll-margin-top: 104px;
+}
+
+.section-heading {
+  margin-top: 8px;
+}
+
+.section-move-move {
+  transition: transform 0.3s ease;
 }
 
 .section-container {

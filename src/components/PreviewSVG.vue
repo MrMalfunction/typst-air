@@ -92,8 +92,9 @@ const generateTypstContent = () => {
   } else {
     headingColor = dark ? '#fff' : '#000'
   }
-  // Set text color for SVG based on dark mode
+  // Set text and link colors for SVG based on dark mode
   const svgTextColor = dark ? '#fff' : '#000'
+  const linkColor = dark ? '#90caf9' : '#26428b'
 
   // Section mapping
   const sectionMap = {
@@ -125,7 +126,7 @@ const generateTypstContent = () => {
       linkedin: linkedin,
       phone: phone,
       personal-site: personal-site,
-      accent-color: "#26428b",
+      accent-color: "${linkColor}",
       heading-color: "${headingColor}",
       paper: "us-letter",
       author-position: center,
@@ -352,10 +353,28 @@ onMounted(async () => {
 
 <template>
   <!-- Right side preview -->
-  <div class="col preview-container q-pa-md">
-    <p class="text-subtitle2 text-grey text-center">
-      All of the text below is selectable and copyable.
-    </p>
+  <div class="col preview-container">
+    <div class="row items-center no-wrap preview-bar">
+      <div class="text-caption text-grey-7">
+        Preview
+        <q-icon class="q-ml-xs" name="info_outline" size="14px">
+          <q-tooltip>Click any text to jump to it. All text is selectable and copyable.</q-tooltip>
+        </q-icon>
+      </div>
+      <q-space />
+      <q-btn
+        color="primary"
+        dense
+        icon="picture_as_pdf"
+        label="Export PDF"
+        no-caps
+        unelevated
+        class="q-px-sm"
+        @click="handleExport"
+      >
+        <q-tooltip v-if="isDark">Exported in light colors</q-tooltip>
+      </q-btn>
+    </div>
     <div class="preview-scroll-container">
       <div ref="contentDiv" class="svg-container">
         <!-- SVG filter for hover glow effect -->
@@ -372,32 +391,34 @@ onMounted(async () => {
           </filter>
         </svg>
         <!-- SVG content will be rendered here -->
-        Renderer is loading. Please Wait.
+        <div class="text-grey-7 text-center q-pa-xl">Loading preview…</div>
       </div>
-    </div>
-    <div class="export-button-container">
-      <q-btn
-        class="full-width"
-        color="primary"
-        :label="isDark ? 'Export PDF (White Mode)' : 'Export to PDF'"
-        @click="handleExport"
-      />
     </div>
   </div>
 </template>
 
 <style scoped>
 .preview-container {
-  height: 100vh;
+  height: calc(100vh - 48px);
   display: flex;
   flex-direction: column;
+  background: var(--app-pane-bg);
+}
+
+.preview-bar {
+  padding: 8px 16px;
 }
 
 .svg-container {
-  flex: 1;
-  overflow: auto;
   width: 100%;
-  border: #1d1d1d solid 1px;
+}
+
+/* The rendered resume, shown as a sheet of paper */
+.svg-container > :deep(svg) {
+  display: block;
+  margin: 0 auto;
+  background: var(--app-paper-bg);
+  box-shadow: var(--app-paper-shadow);
 }
 
 /* SVG hover effect for .tsel (text selection) */
@@ -415,14 +436,6 @@ onMounted(async () => {
 .preview-scroll-container {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 10px;
-}
-
-.export-button-container {
-  position: sticky;
-  bottom: 10px;
-  padding-top: 10px;
-  background-color: white;
-  z-index: 2;
+  padding: 4px 20px 24px;
 }
 </style>

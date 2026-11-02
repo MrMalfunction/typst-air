@@ -52,7 +52,6 @@ const removeProject = (index) => {
 
 <template>
   <div class="col-12">
-    <div class="text-h6">Projects</div>
     <draggable v-model="projects" class="q-gutter-y-sm" handle=".drag-handle" item-key="id">
       <template #item="{ element, index }">
         <EntryCard
