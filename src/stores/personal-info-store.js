@@ -1,5 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
+import { escapeTypstString } from 'src/util/typst_conv.js'
 
 export const usePersonalInfoStore = defineStore('personalInfo', {
   state: () => ({
@@ -14,13 +14,13 @@ export const usePersonalInfoStore = defineStore('personalInfo', {
   actions: {
     formatTYPST() {
       return `
-    #let name = "${escapeTypstSpecialChars(this.name)}"
-    #let location = "${escapeTypstSpecialChars(this.location)}"
-    #let email = "${this.email}"
-    #let phone = "${escapeTypstSpecialChars(this.phone)}"
-    #let github = "${escapeTypstSpecialChars(this.github)}"
-    #let linkedin = "${escapeTypstSpecialChars(this.linkedin)}"
-    #let personal-site = "${escapeTypstSpecialChars(this.personalSite)}"`
+    #let name = "${escapeTypstString(this.name)}"
+    #let location = "${escapeTypstString(this.location)}"
+    #let email = "${escapeTypstString(this.email)}"
+    #let phone = "${escapeTypstString(this.phone)}"
+    #let github = "${escapeTypstString(this.github)}"
+    #let linkedin = "${escapeTypstString(this.linkedin)}"
+    #let personal-site = "${escapeTypstString(this.personalSite)}"`
     },
   },
 })

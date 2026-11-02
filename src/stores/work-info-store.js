@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatBulletPoint, formatTypstDate } from 'src/util/format_bullet_points.js'
-import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
+import { escapeTypstString } from 'src/util/typst_conv.js'
 import { generateId } from 'src/util/id-generator.js'
 
 export const useWorkInfoStore = defineStore('workInfo', {
@@ -49,9 +49,9 @@ export const useWorkInfoStore = defineStore('workInfo', {
 
           return `
       #work(
-        title: "${escapeTypstSpecialChars(work.title)}",
-        company: "${escapeTypstSpecialChars(work.company)}",
-        location: "${escapeTypstSpecialChars(work.location)}",
+        title: "${escapeTypstString(work.title)}",
+        company: "${escapeTypstString(work.company)}",
+        location: "${escapeTypstString(work.location)}",
         dates: dates-helper(start-date: "${formatTypstDate(work.startDate)}", end-date: "${formatTypstDate(work.endDate)}"),
       )
       ${bulletPoints}`

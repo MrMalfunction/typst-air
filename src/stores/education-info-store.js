@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { formatBulletPoint, formatTypstDate } from 'src/util/format_bullet_points.js'
-import { escapeTypstSpecialChars } from 'src/util/typst_conv.js'
+import { escapeTypstString } from 'src/util/typst_conv.js'
 import { generateId } from 'src/util/id-generator.js'
 
 export const useEducationInfoStore = defineStore('educationInfo', {
@@ -39,10 +39,10 @@ export const useEducationInfoStore = defineStore('educationInfo', {
 
           return `
       #edu(
-        institution: "${escapeTypstSpecialChars(edu.institution)}",
-        location: "${escapeTypstSpecialChars(edu.location)}",
+        institution: "${escapeTypstString(edu.institution)}",
+        location: "${escapeTypstString(edu.location)}",
         dates: dates-helper(${edu.startDate ? `start-date: "${formatTypstDate(edu.startDate)}"` : ''}${edu.startDate && edu.endDate ? ', ' : ''}${edu.endDate ? `end-date: "${formatTypstDate(edu.endDate)}"` : ''}),
-        degree: "${escapeTypstSpecialChars(edu.degree)}",
+        degree: "${escapeTypstString(edu.degree)}",
       )
       ${bulletPoints}`
         })
