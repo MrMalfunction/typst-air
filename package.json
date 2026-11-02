@@ -19,8 +19,6 @@
     "@myriaddreamin/typst-ts-web-compiler": "0.6.1-rc2",
     "@myriaddreamin/typst.ts": "0.6.1-rc2",
     "@quasar/extras": "^1.18.0",
-    "axios": "^1.21.0",
-    "pdfjs-dist": "^5.7.284",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "quasar": "^2.35.2",

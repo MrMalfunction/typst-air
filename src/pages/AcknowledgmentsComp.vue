@@ -16,13 +16,6 @@
 
           <div class="q-mb-lg icon-attribution">
             <a
-              href="https://www.flaticon.com/free-icons/artificial-intelligence"
-              title="artificial intelligence icons"
-              >Artificial intelligence icons created by Smashicons - Flaticon</a
-            >
-          </div>
-          <div class="q-mb-lg icon-attribution">
-            <a
               href="https://github.com/stuxf/basic-typst-resume-template?tab=Unlicense-1-ov-file"
               title="resume format"
               >Resume Format [Derived From]</a

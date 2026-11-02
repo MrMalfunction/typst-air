@@ -3,37 +3,10 @@ import draggable from 'vuedraggable'
 import { useWorkInfoStore } from 'stores/work-info-store.js'
 import { storeToRefs } from 'pinia'
 import { handleEditorPaste } from 'src/util/paste_format_handler.js'
-import AiFineTunePopup from 'src/components/ai-fine-tune-popup.vue'
-import { ref, watch } from 'vue'
 import { generateId } from 'src/util/id-generator.js'
 
 const workInfoStore = useWorkInfoStore()
 const { work } = storeToRefs(workInfoStore)
-
-const selectedCompanyName = ref('')
-const selectedStringsArray = ref([])
-const showPopup = ref(false)
-const workBackups = ref({}) // Store backups of work points
-
-// Function to create a deep copy of a work entry's points
-const backupWorkPoints = (workId) => {
-  workBackups.value[workId] = JSON.parse(
-    JSON.stringify(work.value.find((w) => w.id === workId)?.points || []),
-  )
-}
-
-// Initial backup of all work entries
-watch(
-  work,
-  (newWork) => {
-    newWork.forEach((entry) => {
-      if (!workBackups.value[entry.id]) {
-        backupWorkPoints(entry.id)
-      }
-    })
-  },
-  { immediate: true, deep: true },
-)
 
 const createDefaultWorkEntry = () => ({
   id: Date.now(),
@@ -49,18 +22,14 @@ const createDefaultWorkEntry = () => ({
 })
 
 const addWork = () => {
-  const newEntry = createDefaultWorkEntry()
-  work.value.push(newEntry)
-  backupWorkPoints(newEntry.id) // Backup the new entry's points
+  work.value.push(createDefaultWorkEntry())
 }
 
 const removeWork = (index) => {
   if (work.value.length > 1) {
     work.value.splice(index, 1)
   } else {
-    const newEntry = createDefaultWorkEntry()
-    work.value[0] = newEntry
-    backupWorkPoints(newEntry.id)
+    work.value[0] = createDefaultWorkEntry()
   }
 }
 
@@ -79,33 +48,6 @@ const removeWorkBulletPoint = (workIndex, pointIndex) => {
   } else {
     points[0] = { id: generateId(), value: 'Key achievement or responsibility 1' }
   }
-}
-
-const handleUpdateStrings = (strings) => {
-  if (!Array.isArray(strings) || !selectedCompanyName.value) return
-
-  // Find the work entry with the matching company name
-  const workIndex = work.value.findIndex((w) => w.company === selectedCompanyName.value)
-  if (workIndex !== -1) {
-    // Update the points of the matching work entry
-    work.value[workIndex].points = strings.map((s) => ({ id: generateId(), value: s }))
-  }
-}
-const handleDialogStatus = (status) => {
-  showPopup.value = status
-}
-
-const restoreWorkPoints = (index) => {
-  const workId = work.value[index].id
-  if (workBackups.value[workId]) {
-    work.value[index].points = JSON.parse(JSON.stringify(workBackups.value[workId]))
-  }
-}
-
-const openAiPopup = (company, points) => {
-  showPopup.value = true
-  selectedCompanyName.value = company
-  selectedStringsArray.value = points.map((p) => p.value)
 }
 </script>
 
@@ -133,27 +75,6 @@ const openAiPopup = (company, points) => {
               <q-input v-model="element.endDate" label="End Date" outlined required />
             </div>
             <div class="col-12">
-              <div class="row justify-end q-mb-sm">
-                <q-btn
-                  class="q-mr-sm"
-                  color="warning"
-                  icon="restore"
-                  size="sm"
-                  push
-                  @click="restoreWorkPoints(index)"
-                >
-                  <q-tooltip>Restore original points</q-tooltip>
-                </q-btn>
-                <q-btn
-                  label="AI"
-                  push
-                  size="size-md"
-                  @click="openAiPopup(element.company, element.points)"
-                >
-                  <img alt="AI Button" height="32px" src="../assets/ai-icon.png" width="32px" />
-                  <q-tooltip>Fine Tune points to a job.</q-tooltip>
-                </q-btn>
-              </div>
               <draggable
                 v-model="element.points"
                 group="points"
@@ -228,12 +149,4 @@ const openAiPopup = (company, points) => {
       @click="addWork"
     />
   </div>
-  <!-- Insert the popup component here -->
-  <ai-fine-tune-popup
-    v-if="showPopup"
-    :section="selectedCompanyName"
-    :stringsArray="selectedStringsArray"
-    @dialogStatus="handleDialogStatus"
-    @updateStrings="handleUpdateStrings"
-  />
 </template>
