@@ -15,6 +15,10 @@ function secureDeepClone(obj) {
 export const useSaveManagerStore = defineStore('saveManager', {
   state: () => ({
     saves: {},
+    // Name of the save the editor content came from ('' = not saved yet).
+    // Cleared when content is replaced from outside (link or JSON import),
+    // so Save can't overwrite an unrelated save.
+    currentName: '',
   }),
 
   actions: {
@@ -92,5 +96,5 @@ export const useSaveManagerStore = defineStore('saveManager', {
     getSaves: (state) => Object.keys(state.saves),
   },
 
-  persist: true,
+  persist: { pick: ['saves'] },
 })

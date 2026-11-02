@@ -3,6 +3,7 @@
     <q-header>
       <HeaderComp />
     </q-header>
+    <ResumeLinkImport />
 
     <q-page-container>
       <q-page class="row no-wrap">
@@ -121,6 +122,7 @@ import SkillsInfoComp from 'components/SkillsInfoComp.vue'
 import PreviewSVG from 'components/PreviewSVG.vue'
 import SaveComp from 'components/SaveComp.vue'
 import StyleOptionsComp from 'components/StyleOptionsComp.vue'
+import ResumeLinkImport from 'components/ResumeLinkImport.vue'
 
 // Store setup
 const sectionSeqStore = useSectionSeqStore()

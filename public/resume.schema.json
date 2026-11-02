@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://air.amolbohora.com/resume.schema.json",
+  "title": "AIR resume",
+  "description": "Resume format accepted by https://air.amolbohora.com (shared links and Import JSON). See https://air.amolbohora.com/llms.txt.",
+  "type": "object",
+  "properties": {
+    "version": { "const": 1, "description": "Format version. Optional; must be 1 if present." },
+    "personal": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 300 },
+        "location": { "type": "string", "maxLength": 300 },
+        "email": { "type": "string", "maxLength": 300 },
+        "phone": { "type": "string", "maxLength": 300 },
+        "github": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Without https://, e.g. github.com/user"
+        },
+        "linkedin": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Without https://, e.g. linkedin.com/in/user"
+        },
+        "website": { "type": "string", "maxLength": 300 }
+      }
+    },
+    "summary": { "type": "string", "maxLength": 500 },
+    "sectionOrder": {
+      "type": "array",
+      "description": "Order of sections on the resume. Missing sections are added at the end in the default order.",
+      "items": { "enum": ["education", "work", "projects", "skills"] },
+      "uniqueItems": true,
+      "maxItems": 4
+    },
+    "education": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "properties": {
+          "institution": { "type": "string", "maxLength": 300 },
+          "degree": { "type": "string", "maxLength": 300 },
+          "location": { "type": "string", "maxLength": 300 },
+          "startDate": { "type": "string", "maxLength": 300 },
+          "endDate": { "type": "string", "maxLength": 300 },
+          "bullets": { "$ref": "#/$defs/bullets" }
+        }
+      }
+    },
+    "work": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "maxLength": 300 },
+          "company": { "type": "string", "maxLength": 300 },
+          "location": { "type": "string", "maxLength": 300 },
+          "startDate": { "type": "string", "maxLength": 300 },
+          "endDate": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Empty means \"Present\""
+          },
+          "bullets": { "$ref": "#/$defs/bullets" }
+        }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "maxLength": 300 },
+          "role": { "type": "string", "maxLength": 300 },
+          "url": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Without https://, e.g. example.com"
+          },
+          "startDate": { "type": "string", "maxLength": 300 },
+          "endDate": { "type": "string", "maxLength": 300 },
+          "bullets": { "$ref": "#/$defs/bullets" }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string", "maxLength": 300 },
+          "items": {
+            "description": "A list of skills, or one comma-separated string",
+            "oneOf": [
+              {
+                "type": "array",
+                "maxItems": 100,
+                "items": { "type": "string", "maxLength": 300 }
+              },
+              { "type": "string", "maxLength": 2000 }
+            ]
+          }
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "fontSize": { "type": "number", "minimum": 7, "maximum": 14, "description": "Points" },
+        "margin": { "type": "number", "minimum": 0.1, "maximum": 1, "description": "Inches" },
+        "coloredHeadings": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "bullets": {
+      "type": "array",
+      "maxItems": 30,
+      "description": "Plain text. Only <b>bold</b> and <a href=\"https://...\">links</a> are kept; other HTML is reduced to its text.",
+      "items": { "type": "string", "maxLength": 2000 }
+    }
+  }
+}

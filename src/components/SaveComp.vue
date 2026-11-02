@@ -1,14 +1,16 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { Notify } from 'quasar'
+import { Notify, copyToClipboard, exportFile } from 'quasar'
+import { storeToRefs } from 'pinia'
 import { useSaveManagerStore } from 'stores/resume-store'
 import { usePersonalInfoStore } from 'stores/personal-info-store.js'
+import { applyResume, exportResume, parseResumeJson, resumeLink } from 'src/util/resume-json.js'
 
 const resumeStore = useSaveManagerStore()
 const saveDialog = ref(false)
 const saveResumeName = ref('')
 const allResumeNames = computed(() => resumeStore.getSaves)
-const selectedResumeName = ref('')
+const { currentName: selectedResumeName } = storeToRefs(resumeStore)
 const confirmOverwrite = ref(false)
 const overwriteName = ref('')
 
@@ -86,6 +88,55 @@ const handleDelete = () => {
     console.error(`Error deleting resume: ${error}`)
   }
 }
+
+// JSON import / export and share links (format documented in public/llms.txt)
+const fileInput = ref(null)
+
+const fileBaseName = () =>
+  (personalInfoStore.name.trim() || 'resume').replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
+
+const downloadJson = () => {
+  const json = JSON.stringify(exportResume(), null, 2)
+  exportFile(`${fileBaseName()}.resume.json`, json, { mimeType: 'application/json' })
+}
+
+const copyLink = async () => {
+  try {
+    await copyToClipboard(resumeLink(exportResume()))
+    Notify.create({
+      type: 'positive',
+      message: 'Link copied. Anyone who opens it gets this resume in their editor.',
+      timeout: 2500,
+      position: 'top',
+    })
+  } catch {
+    Notify.create({ type: 'negative', message: "Couldn't copy the link", position: 'top' })
+  }
+}
+
+const importJsonFile = async (event) => {
+  const file = event.target.files?.[0]
+  event.target.value = '' // allow picking the same file again
+  if (!file) return
+
+  try {
+    if (file.size > 200_000) throw new Error('This file is too large to be a resume')
+    applyResume(parseResumeJson(await file.text()))
+    selectedResumeName.value = ''
+    Notify.create({
+      type: 'positive',
+      message: `Imported “${file.name}”. Save it to keep it.`,
+      position: 'top',
+    })
+  } catch (error) {
+    Notify.create({
+      type: 'negative',
+      message: `Couldn't import “${file.name}”: ${error.message}`,
+      position: 'top',
+      timeout: 6000,
+    })
+  }
+}
 </script>
 
 <template>
@@ -120,6 +171,12 @@ const handleDelete = () => {
             </q-item-section>
           </q-item>
 
+          <q-separator />
+          <q-item v-close-popup clickable @click="fileInput.click()">
+            <q-item-section avatar><q-icon name="upload_file" /></q-item-section>
+            <q-item-section>Import JSON file…</q-item-section>
+          </q-item>
+
           <template v-if="selectedResumeName">
             <q-separator />
             <q-item v-close-popup clickable class="text-negative" @click="handleDelete">
@@ -130,6 +187,13 @@ const handleDelete = () => {
         </q-list>
       </q-menu>
     </q-btn>
+    <input
+      ref="fileInput"
+      accept="application/json,.json"
+      class="hidden"
+      type="file"
+      @change="importJsonFile"
+    />
 
     <!-- Save: overwrite current (default) or save as a copy -->
     <q-btn-dropdown
@@ -143,10 +207,19 @@ const handleDelete = () => {
       class="q-px-xs"
       @click="handlePrimarySave"
     >
-      <q-list dense style="min-width: 180px">
+      <q-list dense style="min-width: 200px">
         <q-item v-close-popup clickable @click="openSaveDialog">
           <q-item-section avatar><q-icon name="content_copy" /></q-item-section>
           <q-item-section>Save as copy…</q-item-section>
+        </q-item>
+        <q-separator />
+        <q-item v-close-popup clickable @click="downloadJson">
+          <q-item-section avatar><q-icon name="data_object" /></q-item-section>
+          <q-item-section>Download JSON</q-item-section>
+        </q-item>
+        <q-item v-close-popup clickable @click="copyLink">
+          <q-item-section avatar><q-icon name="link" /></q-item-section>
+          <q-item-section>Copy link</q-item-section>
         </q-item>
       </q-list>
     </q-btn-dropdown>

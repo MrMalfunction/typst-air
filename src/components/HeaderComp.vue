@@ -50,6 +50,14 @@
           handle (⠿) on an entry to reorder entries within a section.
         </p>
 
+        <div class="text-subtitle2">Can an AI assistant fill this in for me?</div>
+        <p>
+          Yes. Ask your assistant (ChatGPT, Claude, …) to follow
+          <a href="/llms.txt" target="_blank">air.amolbohora.com/llms.txt</a>. It can give you a
+          link that opens here with your resume filled in, or a JSON file for Load → Import JSON
+          file. You can also send it your current resume with Save → Download JSON.
+        </p>
+
         <div class="text-subtitle2">Is my data shared</div>
         <p>
           No, all of the data lives in your browser and is never sent to a server. I will never

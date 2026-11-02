@@ -1,0 +1,91 @@
+# AIR: resume builder
+
+> https://air.amolbohora.com is a free resume editor with a live typeset preview and PDF export. It runs entirely in the browser: resume data never goes to a server. An AI assistant can fill it in for a user by giving them a link that opens the editor with the resume pre-filled, or a JSON file they can import.
+
+## Option 1: a link (best for chat)
+
+Build the resume as JSON (format below), then give the user this link:
+
+```
+https://air.amolbohora.com/#resume=<the JSON, URL-encoded>
+```
+
+- URL-encode the JSON with JavaScript `encodeURIComponent(JSON.stringify(resume))` or Python `urllib.parse.quote(json.dumps(resume), safe="")`.
+- Everything after `#` stays in the user's browser; it is never sent to the server.
+- The user is asked to confirm before the resume replaces what is in their editor. They can then edit it, save it in the browser and export a PDF.
+- Keep links under about 30,000 characters. For longer resumes, use option 2.
+
+## Option 2: a JSON file
+
+Give the user a `.json` file with the resume. In the editor they choose **Load → Import JSON file…**. The editor can also export the current resume with **Save ▾ → Download JSON**, which is a good starting point for edits.
+
+## Format
+
+JSON Schema: https://air.amolbohora.com/resume.schema.json
+
+All fields are optional. Missing sections become empty. Unknown fields are ignored.
+
+```json
+{
+  "version": 1,
+  "personal": {
+    "name": "Jordan Rivera",
+    "location": "Austin, TX",
+    "email": "jordan@example.com",
+    "phone": "(512) 555-0100",
+    "github": "github.com/jrivera",
+    "linkedin": "linkedin.com/in/jrivera",
+    "website": "jrivera.dev"
+  },
+  "summary": "Backend engineer focused on reliable, well-tested systems.",
+  "sectionOrder": ["work", "projects", "education", "skills"],
+  "work": [
+    {
+      "title": "Senior Software Engineer",
+      "company": "Example Corp",
+      "location": "Remote",
+      "startDate": "Mar 2021",
+      "endDate": "Present",
+      "bullets": [
+        "Cut p99 API latency by <b>40%</b> by redesigning the caching layer",
+        "Led a team of 5 to ship the billing rewrite on schedule"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Open Source CLI",
+      "role": "Maintainer",
+      "url": "github.com/jrivera/cli",
+      "startDate": "2022",
+      "endDate": "Present",
+      "bullets": ["Grew to 2,000 GitHub stars and 40 contributors"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Texas",
+      "degree": "BS, Computer Science",
+      "location": "Austin, TX",
+      "startDate": "2014",
+      "endDate": "2018",
+      "bullets": []
+    }
+  ],
+  "skills": [
+    { "category": "Languages", "items": ["Go", "Python", "TypeScript", "SQL"] },
+    { "category": "Infrastructure", "items": "AWS, Kubernetes, Terraform, PostgreSQL" }
+  ],
+  "style": { "fontSize": 10, "margin": 0.5, "coloredHeadings": true }
+}
+```
+
+## Rules
+
+- `sectionOrder` uses `education`, `work`, `projects`, `skills`. Sections not listed are added at the end.
+- Bullets are plain text. Only `<b>bold</b>` and `<a href="https://...">links</a>` are kept; any other HTML is reduced to its text.
+- Write `github`, `linkedin`, `website` and project `url` without `https://`.
+- An empty `endDate` on a job is shown as "Present".
+- Limits: 300 characters per field (bullets 2,000, summary 500); 30 entries per section; 30 bullets per entry.
+- `style` is optional: `fontSize` 7–14 (points), `margin` 0.1–1 (inches), `coloredHeadings` true/false.
+- The resume is typeset on US Letter paper. Aim for one page: keep bullets short and specific.
