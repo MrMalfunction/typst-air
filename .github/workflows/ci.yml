@@ -25,7 +25,21 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - run: pnpm exec playwright install --with-deps chromium
+
+      # Cache Playwright's browser per Playwright version. Only the headless
+      # shell is needed, and the runner image already has its system
+      # libraries, so no --with-deps (that only added unused fonts).
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(pnpm exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --only-shell chromium
+
       - run: pnpm test
       - uses: actions/upload-artifact@v4
         if: failure()
